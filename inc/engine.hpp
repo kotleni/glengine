@@ -1,3 +1,5 @@
+#ifndef H_ENGINE
+#define H_ENGINE
 #include <iostream>
 #include <memory>
 #include <string>
@@ -47,3 +49,4 @@ public:
     void run();
     void shutdown();
 };
+#endif

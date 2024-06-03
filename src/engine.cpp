@@ -1,5 +1,9 @@
 #include "engine.hpp"
 
+// Here is because redefinition error
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 Engine::Engine() {
     // Nothing
 }
@@ -64,6 +68,12 @@ static const GLfloat vertices[] = {
    0.0f,  1.0f, 0.0f,
 };
 
+static const float texCoords[] = {
+	0.0f, 0.0f, // lower-left corner
+	1.0f, 0.0f, // lower-right corner
+	0.5f, 1.0f // top-center corner
+};
+
 Shader* defaultShader;
 GLuint VAO;
 GLuint VBO;
@@ -79,8 +89,18 @@ void bind_gl() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 }
 
-void Engine::run() {
+void load_assets() {
 	defaultShader = Shader::load("default");
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+
+	int width, height, nrChannels;
+	unsigned char *data = stbi_load("../assets/images/peace.bmp", &width, &height, &nrChannels, 0);
+}
+
+void Engine::run() {
+	load_assets();
 	bind_gl();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
