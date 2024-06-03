@@ -157,9 +157,26 @@ void load_assets() {
 	stbi_image_free(data);
 }
 
+glm::mat4 proj;
+glm::mat4 model;
+glm::mat4 view;
+glm::mat4 trans;
+
+void begin_run() {
+	proj = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+
+	model = glm::mat4(1.0f);
+	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+	view = glm::mat4(1.0f);
+	// NOTE: that we’re translating the scene in the reverse direction
+	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+}
+
 void Engine::run() {
 	load_assets();
 	bind_gl();
+	begin_run();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
@@ -199,6 +216,15 @@ void Engine::on_render() {
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	texturedShader->use();
+
+	trans = glm::rotate(trans, (float)SDL_GetTicks(), glm::vec3(0.0f, 0.0f, 1.0f));
+
+	unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
+	unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+	unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 	// Draw
 	glBindTexture(GL_TEXTURE_2D, defaultTexture);
