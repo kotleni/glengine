@@ -20,6 +20,11 @@ add_executable(${PROJECT_NAME}
 	inc/imgui/imgui_widgets.cpp
 	inc/imgui/backends/imgui_impl_sdl.cpp
     inc/imgui/backends/imgui_impl_opengl3.cpp
+
+	src/mdl/VTXParser.cpp
+	src/mdl/MDLParser.cpp
+	src/mdl/VVDParser.cpp
+
 	src/shader.cpp
 	src/engine.cpp
 	src/main.cpp)
