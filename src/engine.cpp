@@ -44,9 +44,6 @@ void Engine::init() {
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
-	glEnable              ( GL_DEBUG_OUTPUT );
-	//glDebugMessageCallback( MessageCallback, 0 );
-
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	window = SDL_CreateWindow(ENGINE_NAME,
@@ -60,6 +57,9 @@ void Engine::init() {
 	// Glew
 	glewExperimental = GL_TRUE; 
 	glewInit();
+
+	glEnable              ( GL_DEBUG_OUTPUT );
+	glDebugMessageCallback( MessageCallback, 0 );
 }
 
 void Engine::init_gui() {
