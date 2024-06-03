@@ -17,9 +17,7 @@ MessageCallback( GLenum source,
                  const GLchar* message,
                  const void* userParam )
 {
-  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
-           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
-            type, severity, message );
+  fprintf( stderr, "GL: %s\n", message );
 }
 
 void Engine::init() {
@@ -184,9 +182,9 @@ void Engine::on_render() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
-	//glBindTexture(GL_TEXTURE_2D, defaultTexture);
-	//glBindVertexArray(VBO);
-	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindTexture(GL_TEXTURE_2D, defaultTexture);
+	glBindVertexArray(VBO);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Engine::on_render_gui() {
