@@ -12,3 +12,4 @@ void main(){
     vec3 mixed = mix(rgb1, rgb2, mixValue);
 
     color = mixed;
+}
