@@ -59,6 +59,7 @@ void Engine::init() {
 	glewExperimental = GL_TRUE; 
 	glewInit();
 
+	glEnable(GL_DEPTH_TEST);
 	glEnable              ( GL_DEBUG_OUTPUT );
 	glDebugMessageCallback( MessageCallback, 0 );
 }
@@ -83,25 +84,97 @@ void Engine::init_gui() {
 }
 
 float vertices[] = {
-// positions
- // colors
- // texture coords
-0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
-0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
--0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
--0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
-};
-
-unsigned int indices[] = {
-    0, 1, 2,
-    0, 2, 3
+// pos                 // uv
+-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+0.5f, -0.5f, -0.5f,
+ 1.0f, 0.0f,
+0.5f, 0.5f, -0.5f,
+ 1.0f, 1.0f,
+0.5f, 0.5f, -0.5f,
+ 1.0f, 1.0f,
+ -0.5f, 0.5f, -0.5f,
+ 0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 0.0f,
+-0.5f, -0.5f,
+ 0.5f,
+ 0.0f, 0.0f,
+0.5f, -0.5f,
+ 0.5f,
+ 1.0f, 0.0f,
+0.5f, 0.5f,
+ 0.5f,
+ 1.0f, 1.0f,
+0.5f, 0.5f,
+ 0.5f,
+ 1.0f, 1.0f,
+-0.5f, 0.5f,
+ 0.5f,
+ 0.0f, 1.0f,
+-0.5f, -0.5f,
+ 0.5f,
+ 0.0f, 0.0f,
+-0.5f, 0.5f, 0.5f,
+ 1.0f, 0.0f,
+-0.5f, 0.5f, -0.5f,
+ 1.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+-0.5f, -0.5f, 0.5f,
+ 0.0f, 0.0f,
+-0.5f, 0.5f, 0.5f,
+ 1.0f, 0.0f,
+0.5f, 0.5f, 0.5f,
+ 1.0f, 0.0f,
+0.5f, 0.5f, -0.5f,
+ 1.0f, 1.0f,
+0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+0.5f, -0.5f, 0.5f,
+ 0.0f, 0.0f,
+0.5f, 0.5f, 0.5f,
+ 1.0f, 0.0f,
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+0.5f, -0.5f, -0.5f,
+ 1.0f, 1.0f,
+0.5f, -0.5f, 0.5f,
+ 1.0f, 0.0f,
+0.5f, -0.5f, 0.5f,
+ 1.0f, 0.0f,
+-0.5f, -0.5f, 0.5f,
+ 0.0f, 0.0f,
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 1.0f,
+-0.5f,
+ 0.5f, -0.5f,
+ 0.0f, 1.0f,
+0.5f,
+ 0.5f, -0.5f,
+ 1.0f, 1.0f,
+0.5f,
+ 0.5f, 0.5f,
+ 1.0f, 0.0f,
+0.5f,
+ 0.5f, 0.5f,
+ 1.0f, 0.0f,
+-0.5f,
+ 0.5f, 0.5f,
+ 0.0f, 0.0f,
+-0.5f,
+ 0.5f, -0.5f,
+ 0.0f, 1.0f
 };
 
 Shader* defaultShader;
 Shader* texturedShader;
 GLuint VAO;
 GLuint VBO;
-GLuint EBO;
+//GLuint EBO;
 unsigned int defaultTexture;
 
 void bind_gl() {
@@ -114,20 +187,16 @@ void bind_gl() {
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-
 	// EBO
-	glGenBuffers(1, &EBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	//glGenBuffers(1, &EBO);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VBO);
@@ -213,11 +282,11 @@ void Engine::on_render() {
 	glClearColor(clear_color.x * clear_color.w,
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	texturedShader->use();
 
-	trans = glm::rotate(trans, (float)SDL_GetTicks(), glm::vec3(0.0f, 0.0f, 1.0f));
+	model = glm::rotate(model, (float)glm::radians(4.0f), glm::vec3(0.5f, 1.0f, 0.0f));
 
 	unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
@@ -228,7 +297,8 @@ void Engine::on_render() {
 
 	// Draw
 	glBindTexture(GL_TEXTURE_2D, defaultTexture);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	// use indicies: glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 }
 
 void Engine::on_render_gui() {
