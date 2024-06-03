@@ -8,6 +8,20 @@ Engine::Engine() {
     // Nothing
 }
 
+void GLAPIENTRY
+MessageCallback( GLenum source,
+                 GLenum type,
+                 GLuint id,
+                 GLenum severity,
+                 GLsizei length,
+                 const GLchar* message,
+                 const void* userParam )
+{
+  fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message );
+}
+
 void Engine::init() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
@@ -15,11 +29,11 @@ void Engine::init() {
 		return;
 	}
 	// GL 3.0 + GLSL 130
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
-	SDL_GL_SetAttribute(
-		SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	// SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 6);
 	
 	#ifdef OS_MACOS
 		SDL_GL_SetAttribute(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy
@@ -29,12 +43,17 @@ void Engine::init() {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+
+	glEnable              ( GL_DEBUG_OUTPUT );
+	//glDebugMessageCallback( MessageCallback, 0 );
+
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	window = SDL_CreateWindow(ENGINE_NAME,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720,
 		window_flags);
 	gl_context = SDL_GL_CreateContext(window);
+
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
 
@@ -62,21 +81,21 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
-static const GLfloat vertices[] = {
-   -1.0f, -1.0f, 0.0f,
-   1.0f, -1.0f, 0.0f,
-   0.0f,  1.0f, 0.0f,
-};
-
-static const float texCoords[] = {
-	0.0f, 0.0f, // lower-left corner
-	1.0f, 0.0f, // lower-right corner
-	0.5f, 1.0f // top-center corner
+float vertices[] = {
+// positions
+ // colors
+ // texture coords
+0.5f, 0.5f, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, // top right
+0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, // bottom right
+-0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, // bottom left
+-0.5f, 0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f // top left
 };
 
 Shader* defaultShader;
+Shader* texturedShader;
 GLuint VAO;
 GLuint VBO;
+unsigned int defaultTexture;
 
 void bind_gl() {
 	// VAO
@@ -91,12 +110,26 @@ void bind_gl() {
 
 void load_assets() {
 	defaultShader = Shader::load("default");
+	texturedShader = Shader::load("textured");
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+	// Image configs
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
+	// Load image
 	int width, height, nrChannels;
 	unsigned char *data = stbi_load("../assets/images/peace.bmp", &width, &height, &nrChannels, 0);
+
+	// TODO: detect errors
+	
+	// Make GL texture
+	glGenTextures(1, &defaultTexture);
+	glBindTexture(GL_TEXTURE_2D, defaultTexture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	// Free
+	stbi_image_free(data);
 }
 
 void Engine::run() {
@@ -140,21 +173,20 @@ void Engine::on_render() {
 			clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
 
-	defaultShader->use();
+	texturedShader->use();
 
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glVertexAttribPointer(
-   		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
-   		3,                  // size
-   		GL_FLOAT,           // type
-   		GL_FALSE,           // normalized?
-   		0,                  // stride
-   		(void*)0            // array buffer offset
-	);
+	// glEnableVertexAttribArray(0);
+	// glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	// glBindVertexArray(VAO);
+	// glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	// glDisableVertexAttribArray(0);
+	
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
-	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
-	glDisableVertexAttribArray(0);
+	//glBindTexture(GL_TEXTURE_2D, defaultTexture);
+	//glBindVertexArray(VBO);
+	//glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 }
 
 void Engine::on_render_gui() {
