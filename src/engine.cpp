@@ -10,13 +10,16 @@ void Engine::init() {
 		printf("Error: %s\n", SDL_GetError());
 		return;
 	}
-
 	// GL 3.0 + GLSL 130
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, 0);
 	SDL_GL_SetAttribute(
 		SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+	
+	#ifdef OS_MACOS
+		SDL_GL_SetAttribute(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy
+	#endif
 
 	// Create window with graphics context
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -30,6 +33,10 @@ void Engine::init() {
 	gl_context = SDL_GL_CreateContext(window);
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
+
+	// Glew
+	glewExperimental = GL_TRUE; 
+	glewInit();
 }
 
 void Engine::init_gui() {
@@ -51,7 +58,29 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
+static const GLfloat vertices[] = {
+   -1.0f, -1.0f, 0.0f,
+   1.0f, -1.0f, 0.0f,
+   0.0f,  1.0f, 0.0f,
+};
+
+GLuint VAO;
+GLuint VBO;
+
+void bind_gl() {
+	// VAO
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	// VBO
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+}
+
 void Engine::run() {
+	bind_gl();
+
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
 
@@ -88,6 +117,20 @@ void Engine::on_render() {
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glVertexAttribPointer(
+   		0,                  // attribute 0. No particular reason for 0, but must match the layout in the shader.
+   		3,                  // size
+   		GL_FLOAT,           // type
+   		GL_FALSE,           // normalized?
+   		0,                  // stride
+   		(void*)0            // array buffer offset
+	);
+
+	glDrawArrays(GL_TRIANGLES, 0, 3); // Starting from vertex 0; 3 vertices total -> 1 triangle
+	glDisableVertexAttribArray(0);
 }
 
 void Engine::on_render_gui() {

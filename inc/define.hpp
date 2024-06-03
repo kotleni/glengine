@@ -20,4 +20,4 @@
 
 // Engine defenitions
 #define ENGINE_NAME "engine"
-#define ENGINE_GLSL_VERSION "#version 130"
+#define ENGINE_GLSL_VERSION "#version 330"
