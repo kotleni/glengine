@@ -26,6 +26,7 @@
 // clang-format on
 
 #include "define.hpp"
+#include "shader.hpp"
 
 class Engine {
 private:

@@ -64,6 +64,7 @@ static const GLfloat vertices[] = {
    0.0f,  1.0f, 0.0f,
 };
 
+Shader* defaultShader;
 GLuint VAO;
 GLuint VBO;
 
@@ -79,6 +80,7 @@ void bind_gl() {
 }
 
 void Engine::run() {
+	defaultShader = Shader::load("default");
 	bind_gl();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -117,6 +119,8 @@ void Engine::on_render() {
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	defaultShader->use();
 
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
