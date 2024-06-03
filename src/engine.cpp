@@ -4,6 +4,9 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+#define WINDOW_WIDTH 1280
+#define WINDOW_HEIGHT 720
+
 Engine::Engine() {
     // Nothing
 }
@@ -45,7 +48,7 @@ void Engine::init() {
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	window = SDL_CreateWindow(ENGINE_NAME,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1280, 720,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT,
 		window_flags);
 	gl_context = SDL_GL_CreateContext(window);
 
@@ -165,7 +168,7 @@ void Engine::on_event(SDL_Event *event) {
 }
 
 void Engine::on_render() {
-    glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClearColor(clear_color.x * clear_color.w,
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
