@@ -480,7 +480,6 @@ void Engine::on_render() {
 		texturedShader->setMat4("model", model);
 		texturedShader->setMat4("view", view);
 
-		texturedShader->setVec3("lightPos", glm::vec3(1, 1, 0));
 		texturedShader->setVec3("viewPos", cameraPos);
 
 		// Material
@@ -488,6 +487,12 @@ void Engine::on_render() {
 		texturedShader->setVec3("material.diffuse", glm::vec3(0.07568f, 0.61424f, 0.07568f));
 		texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
 		texturedShader->setFloat("material.shininess", 76.8f);
+
+		// Light
+		texturedShader->setVec3("light.position", glm::vec3(1, 1, 0));
+		texturedShader->setVec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
+		texturedShader->setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+		texturedShader->setVec3("light.specular", glm::vec3( 1.0f, 1.0f, 1.0f));
 
 		// Draw
 		glBindTexture(GL_TEXTURE_2D, defaultTexture);
