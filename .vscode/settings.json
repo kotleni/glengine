@@ -72,6 +72,9 @@
 		"locale": "cpp",
 		"queue": "cpp",
 		"stack": "cpp",
-		"__tree": "cpp"
+		"__tree": "cpp",
+		"deque": "cpp",
+		"unordered_set": "cpp",
+		"numeric": "cpp"
 	}
 }
