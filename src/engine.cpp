@@ -298,9 +298,9 @@ void Engine::run() {
 int moveFront = 0;
 int moveRight = 0;
 
-float yaw = 0;
-float pitch = 0;
-// float roll = 0;
+// FIX: clamp yaw and pitch values
+float yaw = 90;
+float pitch = -157;
 
 void Engine::on_event(SDL_Event *event) {
 	const float sensitivity = 0.04f;
@@ -314,7 +314,7 @@ void Engine::on_event(SDL_Event *event) {
 		pitch += ((float)yrel) * sensitivity;
 	}
 
-	// printf("yaw: %d, pitch: %s", yaw, pitch);
+	// printf("yaw: %f, pitch: %f", yaw, pitch);
 
 	if(event->type == SDL_KEYUP) {
 		if(event->key.keysym.sym == SDLK_w) {
