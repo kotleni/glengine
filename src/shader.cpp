@@ -45,7 +45,7 @@ Shader *Shader::load(char* file) {
 	int InfoLogLength;
 
 	// Compile Vertex Shader
-	printf("Compiling shader : %s\n", vert_path);
+	printf("Compiling shader : %s\n", vert_path.c_str());
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -60,7 +60,7 @@ Shader *Shader::load(char* file) {
 	}
 
 	// Compile Fragment Shader
-	printf("Compiling shader : %s\n", frag_path);
+	printf("Compiling shader : %s\n", frag_path.c_str());
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
