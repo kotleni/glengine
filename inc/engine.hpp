@@ -57,5 +57,13 @@ public:
     void init_gui();
     void run();
     void shutdown();
+
+    glm::vec2 get_render_size();
 };
+
+static Engine *instance;
+static Engine *engine() {
+    return instance;
+}
+
 #endif

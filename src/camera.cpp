@@ -1,9 +1,5 @@
 #include "camera.hpp"
 
-// TODO: we need a single point of true (also in engine.cpp)
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-
 const float cameraSpeed = 0.05f;
 const float cameraSensitivity = 0.04f;
 const float fov = 70.0f;
@@ -11,7 +7,8 @@ const float minPitch = -89.0f;
 const float maxPitch = 89.0f;
 
 Camera::Camera() {
-    proj = glm::perspective(glm::radians(fov), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+    glm::vec2 render_size = engine()->get_render_size();
+    proj = glm::perspective(glm::radians(fov), (float)render_size.x / (float)render_size.y, 0.1f, 100.0f);
 }
 
 void Camera::look_relative(float xrel, float yrel) {

@@ -7,9 +7,6 @@
 // NOTE: this header is header only lib
 #include "args.hpp"
 
-#define WINDOW_WIDTH 1280
-#define WINDOW_HEIGHT 720
-
 int moveFront = 0;
 int moveRight = 0;
 
@@ -22,6 +19,7 @@ Model *castleModel;
 Camera *camera;
 
 Engine::Engine() {
+	instance = this;
     directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
 }
 
@@ -74,8 +72,9 @@ void Engine::init(int argc, char ** argv) {
 
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
 		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+	glm::vec2 render_size = this->get_render_size();
 	window = SDL_CreateWindow(ENGINE_NAME,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, render_size.x, render_size.y,
 		window_flags);
 	gl_context = SDL_GL_CreateContext(window);
 
@@ -204,7 +203,7 @@ void Engine::on_render() {
 	if(moveRight != 0)
 		camera->move_right(moveRight);
 
-    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
 	glClearColor(clear_color.x * clear_color.w,
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
@@ -273,4 +272,8 @@ void Engine::shutdown() {
 	SDL_GL_DeleteContext(gl_context);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+glm::vec2 Engine::get_render_size() {
+	return glm::vec2(1600, 800);
 }
