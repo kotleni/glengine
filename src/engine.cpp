@@ -290,7 +290,6 @@ void bind_gl() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)(6 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 	
-
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VBO);
 }
@@ -465,31 +464,35 @@ void Engine::on_render() {
 	cameraFront = glm::normalize(direction);
 
 	glBindVertexArray(VAO);
+
 	for(unsigned int i = 0; i < 10; i++) {
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, cubePositions[i]);
-	float angle = 20.0f * offset;
-	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::translate(model, cubePositions[i]);
+		float angle = 20.0f * offset;
+		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-	unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
+		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
-	unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
-	glm::vec3 lightPos = glm::vec3(8, 8, 2);
-	unsigned int lightPosLoc = glGetUniformLocation(texturedShader->program, "lightPos");
-	glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
+		glm::vec3 lightPos = glm::vec3(8, 8, 2);
+		unsigned int lightPosLoc = glGetUniformLocation(texturedShader->program, "lightPos");
+		glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
 
-	// Draw
-	glBindTexture(GL_TEXTURE_2D, defaultTexture);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	// use indicies: glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+		unsigned int viewPosLoc = glGetUniformLocation(texturedShader->program, "viewPos");
+		glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos));
+
+		// Draw
+		glBindTexture(GL_TEXTURE_2D, defaultTexture);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		// use indicies: glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 	}
 }
 
