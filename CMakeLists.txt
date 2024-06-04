@@ -27,6 +27,8 @@ add_executable(${PROJECT_NAME}
 	src/mdl/VVDParser.cpp
 
 	src/shader.cpp
+	src/mesh.cpp
+	src/model.cpp
 	src/engine.cpp
 	src/main.cpp)
 
@@ -66,7 +68,8 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 # Link Libraries (Linux Hacks)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE GL)
-target_link_libraries(${PROJECT_NAME} PRIVATE GLEW) 	
+target_link_libraries(${PROJECT_NAME} PRIVATE GLEW) 
+target_link_libraries(${PROJECT_NAME} PRIVATE assimp) 	
 
 # Standard Link Libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE

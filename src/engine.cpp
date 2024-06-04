@@ -11,7 +11,7 @@
 // Engine props
 int engine_fps_max = 60;
 bool engine_vsync = false;
-bool engine_debug_rotate = true;
+bool engine_debug_rotate = false;
 
 Engine::Engine() {
     // Nothing
@@ -295,9 +295,15 @@ void bind_gl() {
 	glBindVertexArray(VBO);
 }
 
+#include "model.hpp"
+
+Model *castleModel;
+
 void load_assets() {
 	defaultShader = Shader::load("default");
 	texturedShader = Shader::load("textured");
+
+	castleModel = new Model("../assets/models/Castle OBJ.obj");
 
 	// Image configs
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -466,15 +472,14 @@ void Engine::on_render() {
 
 	glBindVertexArray(VAO);
 
-	for(unsigned int i = 0; i < 10; i++) {
-		glm::mat4 model = glm::mat4(1.0f);
-		model = glm::translate(model, cubePositions[i]);
-		float angle = 20.0f * offset;
-		model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+	glm::mat4 model = glm::mat4(1.0f);
+	model = glm::translate(model, glm::vec3(0, 0, 0));
+	//float angle = 0.0f * offset;
+	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
-		// TODO: split logic to shader and material
+	// TODO: split logic to shader and material
 
 		// Matrixes
 		texturedShader->setMat4("projection", proj);
@@ -484,22 +489,18 @@ void Engine::on_render() {
 		texturedShader->setVec3("viewPos", cameraPos);
 
 		// Material
-		texturedShader->setVec3("material.ambient", glm::vec3(0.0215f, 0.1745f, 0.0215f));
-		texturedShader->setVec3("material.diffuse", glm::vec3(0.07568f, 0.61424f, 0.07568f));
+		texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+		texturedShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
 		texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
 		texturedShader->setFloat("material.shininess", 76.8f);
 
 		// Light
 		texturedShader->setVec3("light.direction", glm::vec3(1.0f, -1.0f, -0.3f));
-		texturedShader->setVec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
-		texturedShader->setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
-		texturedShader->setVec3("light.specular", glm::vec3( 1.0f, 1.0f, 1.0f));
+		texturedShader->setVec3("light.ambient", glm::vec3(0.7f, 0.7f, 0.7f));
+		texturedShader->setVec3("light.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
+		texturedShader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
-		// Draw
-		glBindTexture(GL_TEXTURE_2D, defaultTexture);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		// use indicies: glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
-	}
+	castleModel->Draw(*texturedShader);
 }
 
 void Engine::on_render_gui() {

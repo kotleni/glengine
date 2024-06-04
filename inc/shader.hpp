@@ -1,3 +1,6 @@
+#ifndef H_SHADER
+#define H_SHADER
+
 #include <GL/glew.h>
 #include <SDL_opengl.h>
 #include <string>
@@ -23,3 +26,5 @@ public:
 
     static Shader *load(char* file);
 };
+
+#endif
