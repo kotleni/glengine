@@ -7,6 +7,11 @@
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
+// TODO: move to class
+// Engine props
+int engine_fps_max = 60;
+bool engine_vsync = false;
+
 Engine::Engine() {
     // Nothing
 }
@@ -290,6 +295,11 @@ void Engine::run() {
         on_render_gui();
 
         SDL_GL_SwapWindow(window);
+
+		// FPS cap
+		if(!engine_vsync) {
+			SDL_Delay(1000 / engine_fps_max);
+		}
     }
 
     shutdown();
@@ -408,6 +418,8 @@ void Engine::on_render_gui() {
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::SliderInt("Max fps", &engine_fps_max, 15, 200);
+		ImGui::Checkbox("Vsync", &engine_vsync);
 		ImGui::End();
 	}
 
@@ -415,6 +427,8 @@ void Engine::on_render_gui() {
 	ImGui::Render();
     auto raw = ImGui::GetDrawData();
     ImGui_ImplOpenGL3_RenderDrawData(raw);
+
+	SDL_GL_SetSwapInterval(engine_vsync);
 }
 
 void Engine::shutdown() {
