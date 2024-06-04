@@ -1,17 +1,14 @@
 #include "engine.hpp"
 
-// Here is because redefinition error
+// NOTE: this header is header only lib
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
+// NOTE: this header is header only lib
+#include "args.hpp"
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
-
-// TODO: move to class
-// Engine props
-int engine_fps_max = 60;
-bool engine_vsync = false;
-bool engine_debug_rotate = false;
 
 Engine::Engine() {
     // Nothing
@@ -29,7 +26,20 @@ MessageCallback( GLenum source,
   fprintf( stderr, "GL: %s\n", message );
 }
 
-void Engine::init() {
+void Engine::init(int argc, char ** argv) {
+	const std::vector<std::string> str_args(argv + 1, argv + argc);
+
+	args::ArgumentParser parser("Engine", "Description here");
+    args::Flag tools(parser, "tools", "Disable ticks and enable developer tools in game.", {"tools"});
+    args::Flag vsync(parser, "vsync", "Enable V-Sync in render loop.", {"vsync"});
+
+	std::vector<std::string>::const_iterator args = parser.ParseArgs(str_args);
+	
+	// Init props default values
+	props.is_vsync = bool{vsync};
+	props.max_fps = 200;
+	props.is_tools_mode = bool{tools};
+
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
 		printf("Error: %s\n", SDL_GetError());
@@ -59,7 +69,9 @@ void Engine::init() {
 	gl_context = SDL_GL_CreateContext(window);
 
 	SDL_GL_MakeCurrent(window, gl_context);
-	SDL_GL_SetSwapInterval(1); // Enable vsync
+
+	if(props.is_vsync)
+		SDL_GL_SetSwapInterval(1); // Enable vsync
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
@@ -381,8 +393,8 @@ void Engine::run() {
         SDL_GL_SwapWindow(window);
 
 		// FPS cap
-		if(!engine_vsync) {
-			SDL_Delay(1000 / engine_fps_max);
+		if(!props.is_vsync) {
+			SDL_Delay(1000 / props.max_fps);
 		}
     }
 
@@ -440,7 +452,6 @@ void Engine::on_event(SDL_Event *event) {
 	}
 }
 
-float offset = 0;
 void Engine::on_render() {
 	const float cameraSpeed = 0.05f;
 	
@@ -461,8 +472,6 @@ void Engine::on_render() {
 
 	texturedShader->use();
 
-	if(engine_debug_rotate) offset += 0.09;
-
 	// Update camera
 	glm::vec3 direction;
 	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
@@ -476,7 +485,6 @@ void Engine::on_render() {
 
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0, 0, 0));
-	//float angle = 0.0f * offset;
 	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 	// TODO: split logic to shader and material
@@ -508,16 +516,14 @@ void Engine::on_render_gui() {
 	ImGui_ImplSDL2_NewFrame();
 
 	ImGui::NewFrame();
-    {
+
+	if(props.is_tools_mode) {
+		
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::SliderInt("Max fps", &engine_fps_max, 15, 200);
-		ImGui::Checkbox("Vsync", &engine_vsync);
-		ImGui::BeginGroup();
-			ImGui::Text("Behavior");
-			ImGui::Checkbox("Rotate cubes", &engine_debug_rotate);
-		ImGui::EndGroup();
+		ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
+		ImGui::Checkbox("Vsync", &props.is_vsync);
 		ImGui::End();
 	}
 
@@ -526,7 +532,7 @@ void Engine::on_render_gui() {
     auto raw = ImGui::GetDrawData();
     ImGui_ImplOpenGL3_RenderDrawData(raw);
 
-	SDL_GL_SetSwapInterval(engine_vsync);
+	SDL_GL_SetSwapInterval(props.is_vsync);
 }
 
 void Engine::shutdown() {

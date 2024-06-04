@@ -30,6 +30,7 @@
 
 #include "define.hpp"
 #include "shader.hpp"
+#include "engine_props.hpp"
 
 class Engine {
 private:
@@ -43,9 +44,11 @@ private:
     bool is_runing;
     ImVec4 clear_color;
 public:
+    EngineProps props;
+
     Engine();
 
-    void init();
+    void init(int argc, char ** argv);
     void init_gui();
     void run();
     void shutdown();
