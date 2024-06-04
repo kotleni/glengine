@@ -6,6 +6,8 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include "shader.hpp"
+
 class Camera {
 private:
     float yaw;
@@ -20,6 +22,7 @@ private:
 public:
     Camera();
     void update();
+    void applyToShader(Shader* shader);
     
     void look_relative(float xrel, float yrel);
     void move_forward(float step);

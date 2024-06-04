@@ -221,22 +221,22 @@ void Engine::on_render() {
 	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 	// TODO: split logic to shader and material
-	// Matrixes
-	texturedShader->setMat4("projection", camera->get_projection());
+	// Bind model matrix
 	texturedShader->setMat4("model", model);
-	texturedShader->setMat4("view", camera->get_view());
 
-	texturedShader->setVec3("viewPos", camera->get_position());
-
-	// Material
+	// Material bind
 	texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
 	texturedShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
 	texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
 	texturedShader->setFloat("material.shininess", 76.8f);
 
-	// Light
+	// Camera bind
+	camera->applyToShader(texturedShader);
+
+	// Light bind
 	directionalLight->apply(texturedShader);
 
+	// Draw
 	castleModel->Draw(*texturedShader);
 }
 

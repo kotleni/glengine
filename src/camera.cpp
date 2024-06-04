@@ -33,6 +33,12 @@ void Camera::update() {
 	cameraFront = glm::normalize(direction);
 }
 
+void Camera::applyToShader(Shader *shader) {
+    shader->setMat4("projection", this->get_projection());
+	shader->setMat4("view", this->get_view());
+	shader->setVec3("viewPos", this->get_position());
+}
+
 glm::mat4 Camera::get_projection() {
     return proj;
 }
