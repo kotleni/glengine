@@ -337,7 +337,12 @@ void Engine::on_event(SDL_Event *event) {
 			moveRight = -1;
 		} else if(event->key.keysym.sym == SDLK_d) {
 			moveRight = 1;
-		} 
+		} else if(event->key.keysym.sym == SDLK_p) {
+			if(SDL_GetRelativeMouseMode())
+				SDL_SetRelativeMouseMode(SDL_FALSE);
+			else
+				SDL_SetRelativeMouseMode(SDL_TRUE);
+		}
 	}
 }
 
