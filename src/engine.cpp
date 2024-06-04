@@ -11,6 +11,7 @@
 // Engine props
 int engine_fps_max = 60;
 bool engine_vsync = false;
+bool engine_debug_rotate = true;
 
 Engine::Engine() {
     // Nothing
@@ -454,7 +455,7 @@ void Engine::on_render() {
 
 	texturedShader->use();
 
-	//offset += 0.09;
+	if(engine_debug_rotate) offset += 0.09;
 
 	// Update camera
 	glm::vec3 direction;
@@ -512,6 +513,10 @@ void Engine::on_render_gui() {
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::SliderInt("Max fps", &engine_fps_max, 15, 200);
 		ImGui::Checkbox("Vsync", &engine_vsync);
+		ImGui::BeginGroup();
+			ImGui::Text("Behavior");
+			ImGui::Checkbox("Rotate cubes", &engine_debug_rotate);
+		ImGui::EndGroup();
 		ImGui::End();
 	}
 
