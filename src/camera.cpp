@@ -7,6 +7,8 @@
 const float cameraSpeed = 0.05f;
 const float cameraSensitivity = 0.04f;
 const float fov = 70.0f;
+const float minPitch = -89.0f;
+const float maxPitch = 89.0f;
 
 Camera::Camera() {
     proj = glm::perspective(glm::radians(fov), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
@@ -26,6 +28,12 @@ void Camera::move_right(float step) {
 }
 
 void Camera::update() {
+    // Limit pitch
+    if(this->pitch < minPitch)
+        this->pitch = minPitch;
+    else if(this->pitch > maxPitch)
+        this->pitch = maxPitch;
+
     glm::vec3 direction;
 	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 	direction.y = sin(glm::radians(pitch));
