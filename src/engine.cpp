@@ -304,7 +304,7 @@ void load_assets() {
 
 	// Load image
 	int width, height, nrChannels;
-	unsigned char *data = stbi_load("../assets/images/peace.bmp", &width, &height, &nrChannels, 0);
+	unsigned char *data = stbi_load("../assets/images/emerald.jpg", &width, &height, &nrChannels, 0);
 
 	// TODO: detect errors
 	
@@ -473,6 +473,9 @@ void Engine::on_render() {
 
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
+		// TODO: move logic to shader
+		// TODO: split logic to shader and material
+
 		unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
 		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
 
@@ -488,6 +491,27 @@ void Engine::on_render() {
 
 		unsigned int viewPosLoc = glGetUniformLocation(texturedShader->program, "viewPos");
 		glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos));
+
+		// Materials
+		// ambient
+		glm::vec3 ambient = glm::vec3(0.0215f, 0.1745f, 0.0215f);
+		unsigned int ambientLoc = glGetUniformLocation(texturedShader->program, "material.ambient");
+		glUniform3fv(ambientLoc, 1, glm::value_ptr(ambient));
+
+		// diffuse
+		glm::vec3 diffuse = glm::vec3(0.07568f, 0.61424f, 0.07568f);
+		unsigned int diffuseLoc = glGetUniformLocation(texturedShader->program, "material.diffuse");
+		glUniform3fv(diffuseLoc, 1, glm::value_ptr(diffuse));
+
+		// specular
+		glm::vec3 specular = glm::vec3(0.633f, 0.727811f, 0.633f);
+		unsigned int specularLoc = glGetUniformLocation(texturedShader->program, "material.specular");
+		glUniform3fv(specularLoc, 1, glm::value_ptr(specular));
+
+		// shininess
+		float shininess = 76.8f;
+		unsigned int shininessLoc = glGetUniformLocation(texturedShader->program, "material.shininess");
+		glUniform1f(shininessLoc, shininess);
 
 		// Draw
 		glBindTexture(GL_TEXTURE_2D, defaultTexture);
