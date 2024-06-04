@@ -229,6 +229,13 @@ void load_assets() {
 glm::mat4 proj;
 glm::mat4 model;
 glm::mat4 view;
+
+glm::vec3 cameraPos
+ = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 cameraUp
+ = glm::vec3(0.0f, 1.0f, 0.0f);
+
 glm::mat4 trans;
 
 glm::vec3 cubePositions[] = {
@@ -286,12 +293,48 @@ void Engine::run() {
     shutdown();
 }
 
+int moveFront = 0;
+int moveRight = 0;
+
 void Engine::on_event(SDL_Event *event) {
-    // todo
+	if(event->type == SDL_KEYUP) {
+		if(event->key.keysym.sym == SDLK_w) {
+			moveFront = 0;
+		} else if(event->key.keysym.sym == SDLK_s) {
+			moveFront = 0;
+		} else if(event->key.keysym.sym == SDLK_a) {
+			moveRight = 0;
+		} else if(event->key.keysym.sym == SDLK_d) {
+			moveRight = 0;
+		} 
+	}
+
+    if(event->type == SDL_KEYDOWN) {
+		if(event->key.keysym.sym == SDLK_w) {
+			moveFront = 1;
+		} else if(event->key.keysym.sym == SDLK_s) {
+			moveFront = -1;
+		} else if(event->key.keysym.sym == SDLK_a) {
+			moveRight = -1;
+		} else if(event->key.keysym.sym == SDLK_d) {
+			moveRight = 1;
+		} 
+	}
 }
 
 float offset = 0;
 void Engine::on_render() {
+	const float cameraSpeed = 0.05f;
+	
+	if(moveFront == 1)
+		cameraPos += cameraSpeed * cameraFront;
+	if(moveFront == -1)
+		cameraPos -= cameraSpeed * cameraFront;
+	if(moveRight == 1)
+		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	if(moveRight == -1)
+		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClearColor(clear_color.x * clear_color.w,
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
@@ -309,12 +352,20 @@ void Engine::on_render() {
 	float angle = 20.0f * offset;
 	model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
+	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+
 	unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
 	unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
+	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
+	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 
 	// Draw
 	glBindTexture(GL_TEXTURE_2D, defaultTexture);
