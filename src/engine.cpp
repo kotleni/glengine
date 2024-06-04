@@ -55,6 +55,8 @@ void Engine::init() {
 	SDL_GL_MakeCurrent(window, gl_context);
 	SDL_GL_SetSwapInterval(1); // Enable vsync
 
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 	// Glew
 	glewExperimental = GL_TRUE; 
 	glewInit();
@@ -296,7 +298,24 @@ void Engine::run() {
 int moveFront = 0;
 int moveRight = 0;
 
+float yaw = 0;
+float pitch = 0;
+// float roll = 0;
+
 void Engine::on_event(SDL_Event *event) {
+	const float sensitivity = 0.04f;
+
+	if(event->type == SDL_MOUSEMOTION) {
+		int xrel;
+		int yrel;
+		SDL_GetRelativeMouseState(&xrel, &yrel);
+
+		yaw += ((float)xrel) * sensitivity;
+		pitch += ((float)yrel) * sensitivity;
+	}
+
+	// printf("yaw: %d, pitch: %s", yaw, pitch);
+
 	if(event->type == SDL_KEYUP) {
 		if(event->key.keysym.sym == SDLK_w) {
 			moveFront = 0;
@@ -345,6 +364,13 @@ void Engine::on_render() {
 
 	offset += 0.09;
 
+	// Update camera
+	glm::vec3 direction;
+	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	direction.y = sin(glm::radians(pitch));
+	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	cameraFront = glm::normalize(direction);
+
 	glBindVertexArray(VAO);
 	for(unsigned int i = 0; i < 10; i++) {
 	glm::mat4 model = glm::mat4(1.0f);
@@ -360,12 +386,6 @@ void Engine::on_render() {
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 	unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-	glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 cameraDirection = glm::normalize(cameraPos - cameraTarget);
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-	glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-	glm::vec3 cameraUp = glm::cross(cameraDirection, cameraRight);
 
 	// Draw
 	glBindTexture(GL_TEXTURE_2D, defaultTexture);
