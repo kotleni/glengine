@@ -1,7 +1,9 @@
 {
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
 	"files.associations": {
+		".fantomasignore": "ignore",
 		"iostream": "cpp",
-		"vector": "cpp"
+		"vector": "cpp",
+		"sstream": "cpp"
 	}
 }

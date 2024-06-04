@@ -473,45 +473,21 @@ void Engine::on_render() {
 
 		view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
 
-		// TODO: move logic to shader
 		// TODO: split logic to shader and material
 
-		unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
-		glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
+		// Matrixes
+		texturedShader->setMat4("projection", proj);
+		texturedShader->setMat4("model", model);
+		texturedShader->setMat4("view", view);
 
-		unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
-		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		texturedShader->setVec3("lightPos", glm::vec3(1, 1, 0));
+		texturedShader->setVec3("viewPos", cameraPos);
 
-		unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
-		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
-
-		glm::vec3 lightPos = glm::vec3(8, 8, 2);
-		unsigned int lightPosLoc = glGetUniformLocation(texturedShader->program, "lightPos");
-		glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
-
-		unsigned int viewPosLoc = glGetUniformLocation(texturedShader->program, "viewPos");
-		glUniform3fv(viewPosLoc, 1, glm::value_ptr(cameraPos));
-
-		// Materials
-		// ambient
-		glm::vec3 ambient = glm::vec3(0.0215f, 0.1745f, 0.0215f);
-		unsigned int ambientLoc = glGetUniformLocation(texturedShader->program, "material.ambient");
-		glUniform3fv(ambientLoc, 1, glm::value_ptr(ambient));
-
-		// diffuse
-		glm::vec3 diffuse = glm::vec3(0.07568f, 0.61424f, 0.07568f);
-		unsigned int diffuseLoc = glGetUniformLocation(texturedShader->program, "material.diffuse");
-		glUniform3fv(diffuseLoc, 1, glm::value_ptr(diffuse));
-
-		// specular
-		glm::vec3 specular = glm::vec3(0.633f, 0.727811f, 0.633f);
-		unsigned int specularLoc = glGetUniformLocation(texturedShader->program, "material.specular");
-		glUniform3fv(specularLoc, 1, glm::value_ptr(specular));
-
-		// shininess
-		float shininess = 76.8f;
-		unsigned int shininessLoc = glGetUniformLocation(texturedShader->program, "material.shininess");
-		glUniform1f(shininessLoc, shininess);
+		// Material
+		texturedShader->setVec3("material.ambient", glm::vec3(0.0215f, 0.1745f, 0.0215f));
+		texturedShader->setVec3("material.diffuse", glm::vec3(0.07568f, 0.61424f, 0.07568f));
+		texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
+		texturedShader->setFloat("material.shininess", 76.8f);
 
 		// Draw
 		glBindTexture(GL_TEXTURE_2D, defaultTexture);

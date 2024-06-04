@@ -103,3 +103,23 @@ Shader *Shader::load(char* file) {
 void Shader::use() {
     glUseProgram(program);
 }
+
+void Shader::setMat4(const char* key, glm::mat4 mat) {
+	unsigned int loc = glGetUniformLocation(program, key);
+	glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+}
+
+void Shader::setVec3(const char* key, glm::vec3 vec) {
+	unsigned int loc = glGetUniformLocation(program, key);
+	glUniform3fv(loc, 1, glm::value_ptr(vec));
+}
+
+void Shader::setVec2(const char* key, glm::vec2 vec) {
+	unsigned int loc = glGetUniformLocation(program, key);
+	glUniform2fv(loc, 1, glm::value_ptr(vec));
+}
+
+void Shader::setFloat(const char* key, float value) {
+	unsigned int loc = glGetUniformLocation(program, key);
+	glUniform1f(loc, value);
+}
