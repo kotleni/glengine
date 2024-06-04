@@ -91,89 +91,170 @@ void Engine::init_gui() {
 }
 
 float vertices[] = {
-// pos                 // uv
--0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
+// positions
+ // normals
+ // texture coords
+-0.5f, -0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
+ 0.0f, 0.0f,
 0.5f, -0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
  1.0f, 0.0f,
 0.5f, 0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
  1.0f, 1.0f,
 0.5f, 0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
  1.0f, 1.0f,
- -0.5f, 0.5f, -0.5f,
+-0.5f, 0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
  0.0f, 1.0f,
 -0.5f, -0.5f, -0.5f,
+ 0.0f, 0.0f, -1.0f,
  0.0f, 0.0f,
 -0.5f, -0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  0.0f, 0.0f,
 0.5f, -0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  1.0f, 0.0f,
 0.5f, 0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  1.0f, 1.0f,
 0.5f, 0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  1.0f, 1.0f,
 -0.5f, 0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  0.0f, 1.0f,
 -0.5f, -0.5f,
  0.5f,
+ 0.0f,
+ 0.0f, 1.0f,
  0.0f, 0.0f,
--0.5f, 0.5f, 0.5f,
+-0.5f, 0.5f, 0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 0.0f,
--0.5f, 0.5f, -0.5f,
+-0.5f, 0.5f, -0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 1.0f,
--0.5f, -0.5f, -0.5f,
+-0.5f, -0.5f, -0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 1.0f,
--0.5f, -0.5f, -0.5f,
+-0.5f, -0.5f, -0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 1.0f,
--0.5f, -0.5f, 0.5f,
+-0.5f, -0.5f, 0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 0.0f,
--0.5f, 0.5f, 0.5f,
+-0.5f, 0.5f, 0.5f, -1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 0.0f,
-0.5f, 0.5f, 0.5f,
+ 0.5f, 0.5f, 0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 0.0f,
 0.5f, 0.5f, -0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 1.0f,
 0.5f, -0.5f, -0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 1.0f,
 0.5f, -0.5f, -0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 1.0f,
 0.5f, -0.5f, 0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  0.0f, 0.0f,
 0.5f, 0.5f, 0.5f,
+ 1.0f,
+ 0.0f,
+ 0.0f,
  1.0f, 0.0f,
 -0.5f, -0.5f, -0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  0.0f, 1.0f,
 0.5f, -0.5f, -0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  1.0f, 1.0f,
 0.5f, -0.5f, 0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  1.0f, 0.0f,
 0.5f, -0.5f, 0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  1.0f, 0.0f,
 -0.5f, -0.5f, 0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  0.0f, 0.0f,
 -0.5f, -0.5f, -0.5f,
+ 0.0f, -1.0f,
+ 0.0f,
  0.0f, 1.0f,
 -0.5f,
  0.5f, -0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  0.0f, 1.0f,
 0.5f,
  0.5f, -0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  1.0f, 1.0f,
 0.5f,
  0.5f, 0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  1.0f, 0.0f,
 0.5f,
  0.5f, 0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  1.0f, 0.0f,
 -0.5f,
  0.5f, 0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  0.0f, 0.0f,
 -0.5f,
  0.5f, -0.5f,
+ 0.0f,
+ 1.0f,
+ 0.0f,
  0.0f, 1.0f
 };
 
@@ -199,11 +280,16 @@ void bind_gl() {
 	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	float size = 3 + 3 + 2;
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+	
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(VBO);
@@ -234,7 +320,6 @@ void load_assets() {
 }
 
 glm::mat4 proj;
-glm::mat4 model;
 glm::mat4 view;
 
 glm::vec3 cameraPos
@@ -260,13 +345,6 @@ glm::vec3 cubePositions[] = {
 
 void begin_run() {
 	proj = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
-
-	model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-	view = glm::mat4(1.0f);
-	// NOTE: that we’re translating the scene in the reverse direction
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 }
 
 void Engine::run() {
@@ -397,10 +475,16 @@ void Engine::on_render() {
 
 	unsigned int projectionLoc = glGetUniformLocation(texturedShader->program, "projection");
 	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(proj));
+
 	unsigned int modelLoc = glGetUniformLocation(texturedShader->program, "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
 	unsigned int viewLoc = glGetUniformLocation(texturedShader->program, "view");
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+	glm::vec3 lightPos = glm::vec3(8, 8, 2);
+	unsigned int lightPosLoc = glGetUniformLocation(texturedShader->program, "lightPos");
+	glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
 
 	// Draw
 	glBindTexture(GL_TEXTURE_2D, defaultTexture);
