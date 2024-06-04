@@ -454,7 +454,7 @@ void Engine::on_render() {
 
 	texturedShader->use();
 
-	offset += 0.09;
+	//offset += 0.09;
 
 	// Update camera
 	glm::vec3 direction;
@@ -489,7 +489,7 @@ void Engine::on_render() {
 		texturedShader->setFloat("material.shininess", 76.8f);
 
 		// Light
-		texturedShader->setVec3("light.direction", glm::vec3(-0.2f, -1.0f, -0.3f));
+		texturedShader->setVec3("light.direction", glm::vec3(1.0f, -1.0f, -0.3f));
 		texturedShader->setVec3("light.ambient", glm::vec3(0.5f, 0.5f, 0.5f));
 		texturedShader->setVec3("light.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
 		texturedShader->setVec3("light.specular", glm::vec3( 1.0f, 1.0f, 1.0f));
