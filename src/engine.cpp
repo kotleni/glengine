@@ -7,6 +7,8 @@
 // NOTE: this header is header only lib
 #include "args.hpp"
 
+#include "camera.hpp"
+
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
 
@@ -111,26 +113,16 @@ GLuint VBO;
 #include "model.hpp"
 
 Model *castleModel;
+Camera *camera;
 
 void load_assets() {
 	texturedShader = Shader::load("textured");
 	castleModel = new Model("../assets/models/Castle OBJ.obj");
-}
-
-glm::mat4 proj;
-glm::mat4 view;
-
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
-void begin_run() {
-	proj = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
+	camera = new Camera();
 }
 
 void Engine::run() {
 	load_assets();
-	begin_run();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
@@ -166,20 +158,14 @@ void Engine::run() {
 int moveFront = 0;
 int moveRight = 0;
 
-// FIX: clamp yaw and pitch values
-float yaw = 90;
-float pitch = -157;
-
 void Engine::on_event(SDL_Event *event) {
-	const float sensitivity = 0.04f;
-
+	// Camera look
 	if(event->type == SDL_MOUSEMOTION) {
 		int xrel;
 		int yrel;
 		SDL_GetRelativeMouseState(&xrel, &yrel);
-
-		yaw += ((float)xrel) * sensitivity;
-		pitch -= ((float)yrel) * sensitivity;
+		
+		camera->look_relative((float) xrel, (float) yrel);
 	}
 
 	// printf("yaw: %f, pitch: %f", yaw, pitch);
@@ -214,17 +200,13 @@ void Engine::on_event(SDL_Event *event) {
 	}
 }
 
+
 void Engine::on_render() {
-	const float cameraSpeed = 0.05f;
-	
-	if(moveFront == 1)
-		cameraPos += cameraSpeed * cameraFront;
-	if(moveFront == -1)
-		cameraPos -= cameraSpeed * cameraFront;
-	if(moveRight == 1)
-		cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-	if(moveRight == -1)
-		cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
+	// Camera move
+	if(moveFront != 0)
+		camera->move_forward(moveFront);
+	if(moveRight != 0)
+		camera->move_right(moveRight);
 
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glClearColor(clear_color.x * clear_color.w,
@@ -235,28 +217,20 @@ void Engine::on_render() {
 	texturedShader->use();
 
 	// Update camera
-	glm::vec3 direction;
-	direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-	direction.y = sin(glm::radians(pitch));
-	direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-	cameraFront = glm::normalize(direction);
+	camera->update();
 
 	glBindVertexArray(VAO);
-
-	view = glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-
 	glm::mat4 model = glm::mat4(1.0f);
 	model = glm::translate(model, glm::vec3(0, 0, 0));
 	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
 
 	// TODO: split logic to shader and material
-
 	// Matrixes
-	texturedShader->setMat4("projection", proj);
+	texturedShader->setMat4("projection", camera->get_projection());
 	texturedShader->setMat4("model", model);
-	texturedShader->setMat4("view", view);
+	texturedShader->setMat4("view", camera->get_view());
 
-	texturedShader->setVec3("viewPos", cameraPos);
+	texturedShader->setVec3("viewPos", camera->get_position());
 
 	// Material
 	texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
