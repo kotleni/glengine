@@ -7,10 +7,19 @@
 // NOTE: this header is header only lib
 #include "args.hpp"
 
-#include "camera.hpp"
-
 #define WINDOW_WIDTH 1280
 #define WINDOW_HEIGHT 720
+
+int moveFront = 0;
+int moveRight = 0;
+
+Shader* texturedShader;
+GLuint VAO;
+GLuint VBO;
+//GLuint EBO;
+
+Model *castleModel;
+Camera *camera;
 
 Engine::Engine() {
     directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
@@ -105,16 +114,6 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
-Shader* texturedShader;
-GLuint VAO;
-GLuint VBO;
-//GLuint EBO;
-
-#include "model.hpp"
-
-Model *castleModel;
-Camera *camera;
-
 void load_assets() {
 	texturedShader = Shader::load("textured");
 	castleModel = new Model("../assets/models/Castle OBJ.obj");
@@ -154,9 +153,6 @@ void Engine::run() {
 
     shutdown();
 }
-
-int moveFront = 0;
-int moveRight = 0;
 
 void Engine::on_event(SDL_Event *event) {
 	// Camera look

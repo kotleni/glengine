@@ -31,6 +31,8 @@
 #include "define.hpp"
 #include "shader.hpp"
 #include "engine_props.hpp"
+#include "camera.hpp"
+#include "model.hpp"
 #include "directional_light.hpp"
 
 class Engine {
