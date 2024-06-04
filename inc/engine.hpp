@@ -31,6 +31,7 @@
 #include "define.hpp"
 #include "shader.hpp"
 #include "engine_props.hpp"
+#include "directional_light.hpp"
 
 class Engine {
 private:
@@ -45,6 +46,8 @@ private:
     ImVec4 clear_color;
 public:
     EngineProps props;
+
+    DirectionalLight *directionalLight;
 
     Engine();
 

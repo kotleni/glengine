@@ -27,6 +27,7 @@ add_executable(${PROJECT_NAME}
 	src/model.cpp
 	src/engine.cpp
 	src/camera.cpp
+	src/directional_light.cpp
 	src/main.cpp)
 
 # Include Directories
