@@ -103,263 +103,26 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
-float vertices[] = {
-// positions
- // normals
- // texture coords
--0.5f, -0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 0.0f, 0.0f,
-0.5f, -0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 1.0f, 0.0f,
-0.5f, 0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 1.0f, 1.0f,
-0.5f, 0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 1.0f, 1.0f,
--0.5f, 0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 0.0f, 1.0f,
--0.5f, -0.5f, -0.5f,
- 0.0f, 0.0f, -1.0f,
- 0.0f, 0.0f,
--0.5f, -0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 0.0f, 0.0f,
-0.5f, -0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 1.0f, 0.0f,
-0.5f, 0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 1.0f, 1.0f,
-0.5f, 0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 1.0f, 1.0f,
--0.5f, 0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 0.0f, 1.0f,
--0.5f, -0.5f,
- 0.5f,
- 0.0f,
- 0.0f, 1.0f,
- 0.0f, 0.0f,
--0.5f, 0.5f, 0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 0.0f,
--0.5f, 0.5f, -0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 1.0f,
--0.5f, -0.5f, -0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 1.0f,
--0.5f, -0.5f, -0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 1.0f,
--0.5f, -0.5f, 0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 0.0f,
--0.5f, 0.5f, 0.5f, -1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 0.0f,
- 0.5f, 0.5f, 0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 0.0f,
-0.5f, 0.5f, -0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 1.0f,
-0.5f, -0.5f, -0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 1.0f,
-0.5f, -0.5f, -0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 1.0f,
-0.5f, -0.5f, 0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 0.0f, 0.0f,
-0.5f, 0.5f, 0.5f,
- 1.0f,
- 0.0f,
- 0.0f,
- 1.0f, 0.0f,
--0.5f, -0.5f, -0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 0.0f, 1.0f,
-0.5f, -0.5f, -0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 1.0f, 1.0f,
-0.5f, -0.5f, 0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 1.0f, 0.0f,
-0.5f, -0.5f, 0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 1.0f, 0.0f,
--0.5f, -0.5f, 0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 0.0f, 0.0f,
--0.5f, -0.5f, -0.5f,
- 0.0f, -1.0f,
- 0.0f,
- 0.0f, 1.0f,
--0.5f,
- 0.5f, -0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 0.0f, 1.0f,
-0.5f,
- 0.5f, -0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 1.0f, 1.0f,
-0.5f,
- 0.5f, 0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 1.0f, 0.0f,
-0.5f,
- 0.5f, 0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 1.0f, 0.0f,
--0.5f,
- 0.5f, 0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 0.0f, 0.0f,
--0.5f,
- 0.5f, -0.5f,
- 0.0f,
- 1.0f,
- 0.0f,
- 0.0f, 1.0f
-};
-
-Shader* defaultShader;
 Shader* texturedShader;
 GLuint VAO;
 GLuint VBO;
 //GLuint EBO;
-unsigned int defaultTexture;
-
-void bind_gl() {
-	// VAO
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-
-	// VBO
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	// EBO
-	//glGenBuffers(1, &EBO);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	float size = 3 + 3 + 2;
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, size * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-	
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(VBO);
-}
 
 #include "model.hpp"
 
 Model *castleModel;
 
 void load_assets() {
-	defaultShader = Shader::load("default");
 	texturedShader = Shader::load("textured");
-
 	castleModel = new Model("../assets/models/Castle OBJ.obj");
-
-	// Image configs
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	// Load image
-	int width, height, nrChannels;
-	unsigned char *data = stbi_load("../assets/images/emerald.jpg", &width, &height, &nrChannels, 0);
-
-	// TODO: detect errors
-	
-	// Make GL texture
-	glGenTextures(1, &defaultTexture);
-	glBindTexture(GL_TEXTURE_2D, defaultTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	// Free
-	stbi_image_free(data);
 }
 
 glm::mat4 proj;
 glm::mat4 view;
 
-glm::vec3 cameraPos
- = glm::vec3(0.0f, 0.0f, 3.0f);
+glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp
- = glm::vec3(0.0f, 1.0f, 0.0f);
-
-glm::mat4 trans;
-
-glm::vec3 cubePositions[] = {
-	glm::vec3( 0.0f, 0.0f, 0.0f),
-	glm::vec3( 2.0f, 5.0f, -15.0f),
-	glm::vec3(-1.5f, -2.2f, -2.5f),
-	glm::vec3(-3.8f, -2.0f, -12.3f),
-	glm::vec3( 2.4f, -0.4f, -3.5f),
-	glm::vec3(-1.7f, 3.0f, -7.5f),
-	glm::vec3( 1.3f, -2.0f, -2.5f),
-	glm::vec3( 1.5f, 2.0f, -2.5f),
-	glm::vec3( 1.5f, 0.2f, -1.5f),
-	glm::vec3(-1.3f, 1.0f, -1.5f)
-};
+glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 void begin_run() {
 	proj = glm::perspective(glm::radians(45.0f), (float)WINDOW_WIDTH / (float)WINDOW_HEIGHT, 0.1f, 100.0f);
@@ -367,7 +130,6 @@ void begin_run() {
 
 void Engine::run() {
 	load_assets();
-	bind_gl();
 	begin_run();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -417,7 +179,7 @@ void Engine::on_event(SDL_Event *event) {
 		SDL_GetRelativeMouseState(&xrel, &yrel);
 
 		yaw += ((float)xrel) * sensitivity;
-		pitch += ((float)yrel) * sensitivity;
+		pitch -= ((float)yrel) * sensitivity;
 	}
 
 	// printf("yaw: %f, pitch: %f", yaw, pitch);
@@ -489,24 +251,24 @@ void Engine::on_render() {
 
 	// TODO: split logic to shader and material
 
-		// Matrixes
-		texturedShader->setMat4("projection", proj);
-		texturedShader->setMat4("model", model);
-		texturedShader->setMat4("view", view);
+	// Matrixes
+	texturedShader->setMat4("projection", proj);
+	texturedShader->setMat4("model", model);
+	texturedShader->setMat4("view", view);
 
-		texturedShader->setVec3("viewPos", cameraPos);
+	texturedShader->setVec3("viewPos", cameraPos);
 
-		// Material
-		texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
-		texturedShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
-		texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
-		texturedShader->setFloat("material.shininess", 76.8f);
+	// Material
+	texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
+	texturedShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+	texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
+	texturedShader->setFloat("material.shininess", 76.8f);
 
-		// Light
-		texturedShader->setVec3("light.direction", glm::vec3(1.0f, -1.0f, -0.3f));
-		texturedShader->setVec3("light.ambient", glm::vec3(0.7f, 0.7f, 0.7f));
-		texturedShader->setVec3("light.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
-		texturedShader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
+	// Light
+	texturedShader->setVec3("light.direction", glm::vec3(1.0f, -1.0f, -0.3f));
+	texturedShader->setVec3("light.ambient", glm::vec3(0.7f, 0.7f, 0.7f));
+	texturedShader->setVec3("light.diffuse", glm::vec3(0.9f, 0.9f, 0.9f));
+	texturedShader->setVec3("light.specular", glm::vec3(1.0f, 1.0f, 1.0f));
 
 	castleModel->Draw(*texturedShader);
 }

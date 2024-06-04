@@ -1,0 +1,5 @@
+object => {
+    name = 'House Scene'
+    model = 'house_scene'
+    scale = (1, 1, 1)
+}
