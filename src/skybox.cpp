@@ -1,10 +1,8 @@
 #include "skybox.hpp"
 
-#ifndef STB_IMAGE_IMPLEMENTATION
 // NOTE: this header is header only lib
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#endif
 
 float skyboxVertices[] = {
     // positions          

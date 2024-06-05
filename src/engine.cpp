@@ -1,8 +1,10 @@
 #include "engine.hpp"
 
+// FIXME: removed here, bcs has is anywhere
+// FIXME: write an image loader 
 // NOTE: this header is header only lib
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
+//#define STB_IMAGE_IMPLEMENTATION
+//#include "stb_image.h"
 
 // NOTE: this header is header only lib
 #include "args.hpp"
