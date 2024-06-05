@@ -287,6 +287,28 @@ void Engine::on_render_gui() {
 		ImGui::End();
 	}
 
+	// Game object editor
+	if(props.is_tools_mode && selectedIndex != -1) {
+		GameObject *gObj = this->gameObjects->at(selectedIndex);
+
+		float *position = new float[] { gObj->position.x, gObj->position.y, gObj->position.z };
+		float *scale = new float[] { gObj->scale.x, gObj->scale.y, gObj->scale.z };
+
+		ImGui::Begin(gObj->name.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		if(ImGui::InputFloat3("Position", position)) {
+			gObj->position.x = position[0];
+			gObj->position.y = position[1];
+			gObj->position.z = position[2];
+		}
+		// TODO: impl rotation ImGui::InputFloat3("Rotation", arr);
+		if(ImGui::InputFloat3("Scale", scale)) {
+			gObj->scale.x = scale[0];
+			gObj->scale.y = scale[1];
+			gObj->scale.z = scale[2];
+		}
+		ImGui::End();
+	}
+
 	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
 	ImGui::Checkbox("Light", &props.is_render_light);
