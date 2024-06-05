@@ -13,12 +13,12 @@ class GameObject {
 private:
     ResourcesManager *resourcesManager;
     Model* model;
-    std::string name;
 
     GLuint VAO;
     GLuint VBO;
     //GLuint EBO;
 public:
+    std::string name;
     glm::vec3 position;
     glm::vec3 rotate;
     glm::vec3 scale;

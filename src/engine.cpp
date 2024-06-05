@@ -244,6 +244,7 @@ void Engine::on_render() {
 	}
 }
 
+int selectedIndex = -1;
 void Engine::on_render_gui() {
     ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
@@ -254,6 +255,35 @@ void Engine::on_render_gui() {
 		ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::End();
+	}
+
+	if(props.is_tools_mode) {
+		// this->gameObjects->erase(this->gameObjects->begin() + i);
+		ImGui::Begin("Game objects", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		if(this->gameObjects->size() > 0) {
+			for(int i = 0; i < this->gameObjects->size(); i +=1) {
+				GameObject *gObj = this->gameObjects->at(i);
+
+				// Selector
+				if(selectedIndex == i) {
+					ImGui::Text("*");
+					ImGui::SameLine();
+				}
+
+				// Name
+				ImGui::Text("%s", gObj->name.c_str());
+
+				// Select btn
+				if(selectedIndex != i) {
+					ImGui::SameLine();
+					if(ImGui::Button("Select"))
+						selectedIndex = i;
+				}
+			}
+		} else {
+			ImGui::Text("Empty list");
+		}
 		ImGui::End();
 	}
 
