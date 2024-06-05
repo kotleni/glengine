@@ -34,6 +34,7 @@
 #include "camera.hpp"
 #include "model.hpp"
 #include "directional_light.hpp"
+#include "skybox.hpp"
 
 class Engine {
 private:

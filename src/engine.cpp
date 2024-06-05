@@ -19,10 +19,10 @@ GLuint VBO;
 
 Model *castleModel;
 Camera *camera;
+Skybox *skybox;
 
 Engine::Engine() {
 	instance = this;
-    directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
 }
 
 void GLAPIENTRY
@@ -117,14 +117,14 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
-void load_assets() {
+void Engine::run() {
 	texturedShader = Shader::load("textured");
 	castleModel = new Model("../assets/models/Castle OBJ.obj");
 	camera = new Camera();
-}
 
-void Engine::run() {
-	load_assets();
+    directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
+	skybox = new Skybox();
+	skybox->load("skybox1");
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
@@ -217,6 +217,7 @@ void Engine::on_render() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw skybox
+	skybox->draw(camera);
 
 	// Draw objects
 	texturedShader->use();
