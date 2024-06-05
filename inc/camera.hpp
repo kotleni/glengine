@@ -6,7 +6,6 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "engine.hpp"
 #include "shader.hpp"
 
 class Camera {
@@ -21,7 +20,7 @@ private:
     glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 public:
-    Camera();
+    Camera(glm::vec2 render_size);
     void update();
     void applyToShader(Shader* shader);
     

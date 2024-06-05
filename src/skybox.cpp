@@ -70,7 +70,7 @@ void Skybox::load(std::string name) {
 	int width, height, nrChannels;
 	unsigned char *data;
 	for(unsigned int i = 0; i < textures_faces.size(); i++) {
-		std::string path = "../assets/images/" + name + textures_faces[i];
+		std::string path = "../assets/images/" + name + "/" + textures_faces[i];
 		data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 	}
