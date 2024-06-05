@@ -246,14 +246,16 @@ void Engine::on_render_gui() {
 	ImGui::NewFrame();
 
 	if(props.is_tools_mode) {
-		
 		ImGui::Begin("Debug");
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
-		ImGui::Checkbox("Vsync", &props.is_vsync);
 		ImGui::End();
 	}
+
+	ImGui::Begin("Settings");
+	ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
+	ImGui::Checkbox("Vsync", &props.is_vsync);
+	ImGui::End();
 
 	// Rendering
 	ImGui::Render();
