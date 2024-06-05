@@ -1,5 +1,9 @@
 #version 330 core
 
+struct Features {
+    bool is_use_light;
+};
+
 struct Material {
     vec3 ambient;
     vec3 diffuse;
@@ -17,6 +21,7 @@ struct Light {
 
 uniform Light light;
 uniform Material material;
+uniform Features features;
 
 out vec4 FragColor;
 
@@ -48,7 +53,11 @@ void main() {
     vec3 specular = material.specular * spec * light.specular;
 
     vec3 result = (ambient + diffuse + specular) * color;
-    FragColor = vec4(result, 1.0);
-
+    
+    if(features.is_use_light)
+        FragColor = vec4(result, 1.0);
+    else
+        FragColor = vec4(color, 1.0);
+    
     // NOTE: to debug normals: FragColor = vec4(norm, 1.0);
 }

@@ -23,6 +23,7 @@ public:
     void setVec3(const char* key, glm::vec3 vec);
     void setVec2(const char* key, glm::vec2 vec);
     void setFloat(const char* key, float value);
+    void setBool(const char* key, bool value);
 
     static Shader *load(char* file);
 };

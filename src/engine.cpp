@@ -48,6 +48,7 @@ void Engine::init(int argc, char ** argv) {
 	props.is_vsync = bool{vsync};
 	props.max_fps = 200;
 	props.is_tools_mode = bool{tools};
+	props.is_render_light = true;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
@@ -229,6 +230,8 @@ void Engine::on_render() {
 	texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
 	texturedShader->setFloat("material.shininess", 76.8f);
 
+	texturedShader->setBool("features.is_use_light", props.is_render_light);
+
 	// Camera bind
 	camera->applyToShader(texturedShader);
 
@@ -254,6 +257,7 @@ void Engine::on_render_gui() {
 
 	ImGui::Begin("Settings");
 	ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
+	ImGui::Checkbox("Light", &props.is_render_light);
 	ImGui::Checkbox("Vsync", &props.is_vsync);
 	ImGui::End();
 

@@ -123,3 +123,9 @@ void Shader::setFloat(const char* key, float value) {
 	unsigned int loc = glGetUniformLocation(program, key);
 	glUniform1f(loc, value);
 }
+
+
+void Shader::setBool(const char* key, bool value) {
+	unsigned int loc = glGetUniformLocation(program, key);
+	glUniform1i(loc, value);
+}
