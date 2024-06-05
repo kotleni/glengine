@@ -36,6 +36,7 @@
 #include "directional_light.hpp"
 #include "skybox.hpp"
 #include "resources_manager.hpp"
+#include "game_object.hpp"
 
 class Engine {
 private:
@@ -48,6 +49,8 @@ private:
     ImGuiIO io;
     bool is_runing;
     ImVec4 clear_color;
+
+    std::vector<GameObject*> *gameObjects;
 public:
     EngineProps props;
 

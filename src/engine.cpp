@@ -13,11 +13,7 @@ int moveFront = 0;
 int moveRight = 0;
 
 Shader* texturedShader;
-GLuint VAO;
-GLuint VBO;
-//GLuint EBO;
 
-Model *castleModel;
 Camera *camera;
 Skybox *skybox;
 
@@ -118,11 +114,17 @@ void Engine::init_gui() {
 }
 
 void Engine::run() {
+	this->gameObjects = new std::vector<GameObject*>();
+
 	resourcesMamanger = new ResourcesManager();
 	resourcesMamanger->loadAll();
 
 	texturedShader = resourcesMamanger->getShader("textured");
-	castleModel = resourcesMamanger->getModel("../assets/models/Castle/Castle OBJ.obj");
+
+	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/Castle OBJ.obj");
+	gameObjects->push_back(castleObj);
+	GameObject *tvObj = new GameObject(resourcesMamanger, "../assets/models/TV/uploads_files_2941243_retrotv0319.obj");
+	gameObjects->push_back(tvObj);
 
 	glm::vec2 render_size = engine()->get_render_size();
 	camera = new Camera(render_size);
@@ -224,24 +226,9 @@ void Engine::on_render() {
 	// Draw skybox
 	skybox->draw(camera);
 
-	// Draw objects
-	texturedShader->use();
+ 	texturedShader->use();
 
-	glBindVertexArray(VAO);
-	glm::mat4 model = glm::mat4(1.0f);
-	model = glm::translate(model, glm::vec3(0, 0, 0));
-	//model = glm::rotate(model, glm::radians(angle), glm::vec3(1.0f, 0.3f, 0.5f));
-
-	// TODO: split logic to shader and material
-	// Bind model matrix
-	texturedShader->setMat4("model", model);
-
-	// Material bind
-	texturedShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
-	texturedShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
-	texturedShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
-	texturedShader->setFloat("material.shininess", 76.8f);
-
+	// Props bind
 	texturedShader->setBool("features.is_use_light", props.is_render_light);
 
 	// Camera bind
@@ -251,7 +238,10 @@ void Engine::on_render() {
 	directionalLight->apply(texturedShader);
 
 	// Draw
-	castleModel->Draw(*texturedShader);
+	for(int i = 0; i < this->gameObjects->size(); i +=1) {
+		GameObject *gObj = this->gameObjects->at(i);
+		gObj->draw(camera, texturedShader);
+	}
 }
 
 void Engine::on_render_gui() {
