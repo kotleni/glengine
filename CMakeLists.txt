@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
 	src/engine.cpp
 	src/camera.cpp
 	src/directional_light.cpp
+	src/skybox.cpp
 	src/main.cpp)
 
 # Include Directories

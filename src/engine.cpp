@@ -11,59 +11,12 @@ int moveFront = 0;
 int moveRight = 0;
 
 Shader* texturedShader;
-Shader* skyboxShader;
 GLuint VAO;
 GLuint VBO;
-unsigned int skyboxVAO, skyboxVBO;
 //GLuint EBO;
 
 Model *castleModel;
 Camera *camera;
-
-float skyboxVertices[] = {
-        // positions          
-        -1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-        -1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f, -1.0f,
-         1.0f,  1.0f,  1.0f,
-         1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f, -1.0f,
-         1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-         1.0f, -1.0f,  1.0f
-    };
 
 Engine::Engine() {
 	instance = this;
@@ -164,52 +117,12 @@ void Engine::init_gui() {
 
 void load_assets() {
 	texturedShader = Shader::load("textured");
-	skyboxShader = Shader::load("skybox");
 	castleModel = new Model("../assets/models/Castle OBJ.obj");
 	camera = new Camera();
 }
 
-unsigned int cubemapTexture;
-
-void init_skybox() {
-	glGenTextures(1, &cubemapTexture);
-
-	std::vector<std::string> textures_faces = {
-		"right.jpg",
-		"left.jpg",
-		"top.jpg",
-		"bottom.jpg",
-		"front.jpg",
-		"back.jpg"
-	};
-
-	int width, height, nrChannels;
-	unsigned char *data;
-	for(unsigned int i = 0; i < textures_faces.size(); i++) {
-		std::string path = "../assets/images/" + textures_faces[i];
-		data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-	}
-
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	// init skybox values
-	glGenVertexArrays(1, &skyboxVAO);
-    glGenBuffers(1, &skyboxVBO);
-    glBindVertexArray(skyboxVAO);
-    glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-}
-
 void Engine::run() {
 	load_assets();
-	init_skybox();
 
     clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
@@ -301,20 +214,7 @@ void Engine::on_render() {
 			clear_color.w);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glDepthMask(GL_FALSE);
-
-	skyboxShader->use();
-	glm::mat4 view = glm::mat4(glm::mat3(camera->get_view()));
-	skyboxShader->setInt("skybox", 1);
-	skyboxShader->setMat4("view", view);
-    skyboxShader->setMat4("projection", camera->get_projection());
-
-	glBindVertexArray(skyboxVAO);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-    glBindVertexArray(0);
-	glDepthMask(GL_TRUE);
+	// Draw skybox
 
 	// Draw objects
 	texturedShader->use();
