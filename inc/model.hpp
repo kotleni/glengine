@@ -1,3 +1,6 @@
+#ifndef H_MODEL
+#define H_MODEL
+
 #include <string>
 #include <vector>
 #include <iostream>
@@ -10,7 +13,7 @@
 
 class Model {
 public:
-    Model(char *path) { loadModel(path); }
+    Model(std::string path) { loadModel(path); }
 
     void Draw(Shader &shader);
 private:
@@ -24,3 +27,5 @@ private:
     Mesh processMesh(aiMesh *mesh, const aiScene *scene);
     std::vector<Texture> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
 };
+
+#endif

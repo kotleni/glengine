@@ -1,3 +1,6 @@
+#ifndef H_MESH
+#define H_MESH
+
 #include <vector>
 
 #include "shader.hpp"
@@ -17,3 +20,5 @@ private:
     unsigned int VAO, VBO, EBO;
     void setupMesh();
 };
+
+#endif

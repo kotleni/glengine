@@ -118,9 +118,11 @@ void Engine::init_gui() {
 }
 
 void Engine::run() {
-	texturedShader = Shader::load("textured");
-	//castleModel = new Model("../assets/models/Castle/Castle OBJ.obj");
-	castleModel = new Model("../assets/models/TV/uploads_files_2941243_retrotv0319.obj");
+	resourcesMamanger = new ResourcesManager();
+	resourcesMamanger->loadAll();
+
+	texturedShader = resourcesMamanger->getShader("textured");
+	castleModel = resourcesMamanger->getModel("../assets/models/Castle/Castle OBJ.obj");
 
 	glm::vec2 render_size = engine()->get_render_size();
 	camera = new Camera(render_size);

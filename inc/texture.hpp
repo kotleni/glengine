@@ -1,3 +1,6 @@
+#ifndef H_TEXTURE
+#define H_TEXTURE
+
 #include <string>
 
 struct Texture {
@@ -5,3 +8,5 @@ struct Texture {
     std::string type;
     std::string path;
 };
+
+#endif

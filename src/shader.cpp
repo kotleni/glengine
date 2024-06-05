@@ -4,7 +4,7 @@ Shader::Shader(GLint programId) {
     program = programId;
 }
 
-Shader *Shader::load(char* file) {
+Shader *Shader::load(std::string file) {
     std::string vert_path = "../assets/shaders/";
     vert_path.append(file);
     vert_path.append(".vert");
@@ -26,7 +26,7 @@ Shader *Shader::load(char* file) {
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}else{
-		printf("Can't to open %s.\n", vert_path);
+		printf("Can't to open %s.\n", vert_path.c_str());
 		getchar();
 		return 0;
 	}

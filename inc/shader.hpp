@@ -26,7 +26,7 @@ public:
     void setBool(const char* key, bool value);
     void setInt(const char* key, int value);
 
-    static Shader *load(char* file);
+    static Shader *load(std::string file);
 };
 
 #endif

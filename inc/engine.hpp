@@ -35,6 +35,7 @@
 #include "model.hpp"
 #include "directional_light.hpp"
 #include "skybox.hpp"
+#include "resources_manager.hpp"
 
 class Engine {
 private:
@@ -51,6 +52,8 @@ public:
     EngineProps props;
 
     DirectionalLight *directionalLight;
+
+    ResourcesManager *resourcesMamanger;
 
     Engine();
 
