@@ -107,6 +107,7 @@ void Engine::init_gui() {
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
+	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(0, 0));
 	// ImGui::StyleColorsClassic();
 
 	// Setup Platform/Renderer backends
@@ -249,13 +250,13 @@ void Engine::on_render_gui() {
 	ImGui::NewFrame();
 
 	if(props.is_tools_mode) {
-		ImGui::Begin("Debug");
+		ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
 			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		ImGui::End();
 	}
 
-	ImGui::Begin("Settings");
+	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 	ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
 	ImGui::Checkbox("Light", &props.is_render_light);
 	ImGui::Checkbox("Vsync", &props.is_vsync);
