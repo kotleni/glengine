@@ -24,6 +24,7 @@ public:
     void setVec2(const char* key, glm::vec2 vec);
     void setFloat(const char* key, float value);
     void setBool(const char* key, bool value);
+    void setInt(const char* key, int value);
 
     static Shader *load(char* file);
 };
