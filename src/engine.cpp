@@ -259,7 +259,6 @@ void Engine::on_render_gui() {
 	}
 
 	if(props.is_tools_mode) {
-		// this->gameObjects->erase(this->gameObjects->begin() + i);
 		ImGui::Begin("Game objects", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
 		if(this->gameObjects->size() > 0) {
 			for(int i = 0; i < this->gameObjects->size(); i +=1) {
@@ -305,6 +304,9 @@ void Engine::on_render_gui() {
 			gObj->scale.x = scale[0];
 			gObj->scale.y = scale[1];
 			gObj->scale.z = scale[2];
+		}
+		if(ImGui::Button("Remove")) {
+			this->gameObjects->erase(this->gameObjects->begin() + selectedIndex);
 		}
 		ImGui::End();
 	}
