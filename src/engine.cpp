@@ -310,6 +310,7 @@ void Engine::on_render_gui() {
 		}
 		if(ImGui::Button("Remove")) {
 			this->gameObjects->erase(this->gameObjects->begin() + selectedIndex);
+			selectedIndex = -1;
 		}
 		ImGui::End();
 	}
