@@ -208,14 +208,17 @@ void Engine::on_event(SDL_Event *event) {
 
 
 void Engine::on_render() {
-	// Camera move
-	if(moveFront != 0)
-		camera->move_forward(moveFront);
-	if(moveRight != 0)
-		camera->move_right(moveRight);
+	// Update camera is mouse pinned
+	if(SDL_GetRelativeMouseMode()) {
+		// Camera move
+		if(moveFront != 0)
+			camera->move_forward(moveFront);
+		if(moveRight != 0)
+			camera->move_right(moveRight);
 
-	// Update camera
-	camera->update();
+		// Update camera
+		camera->update();
+	}
 
     glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
 	glClearColor(clear_color.x * clear_color.w,
