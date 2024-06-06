@@ -11,4 +11,4 @@ Cpp 3d OpenGL simple game engine.
 ...
 
 <br>
-<img src="https://github.com/kotleni/glengine/blob/master/docs/screenshot1.jpg?raw=true" width=270>
+<img src="https://github.com/kotleni/glengine/blob/master/docs/screenshot1.jpg?raw=true" width=410>
