@@ -79,11 +79,6 @@ void Engine::init(int argc, char ** argv) {
 
 	SDL_GL_MakeCurrent(window, gl_context);
 
-	if(props.is_vsync)
-		SDL_GL_SetSwapInterval(1); // Enable vsync
-
-	SDL_SetRelativeMouseMode(SDL_TRUE);
-
 	// Glew
 	glewExperimental = GL_TRUE; 
 	glewInit();
@@ -113,7 +108,46 @@ void Engine::init_gui() {
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 }
 
+void Engine::render_splash() {
+	// NOTE: Double render, not shown at first
+	for(int i = 0; i < 2; i += 1) {
+		glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
+		glClearColor(1, 1, 1, 1);
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		SDL_Event event;
+		while(SDL_PollEvent(&event)) {
+			ImGui_ImplSDL2_ProcessEvent(&event);
+		}
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+
+		ImGui::NewFrame();
+
+		ImGui::Begin("Engine", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+			ImGui::Text("Loading...");
+			// ImGui::SameLine(0);
+			ImGui::ProgressBar(100, ImVec2(200, 0));
+		ImGui::End();
+
+		// Rendering
+		ImGui::Render();
+    	auto raw = ImGui::GetDrawData();
+    	ImGui_ImplOpenGL3_RenderDrawData(raw);
+
+		SDL_GL_SwapWindow(window);
+	}
+}
+
 void Engine::run() {
+	render_splash();
+
+	if(props.is_vsync)
+		SDL_GL_SetSwapInterval(1); // Enable vsync
+
+	SDL_SetRelativeMouseMode(SDL_TRUE);
+
 	this->gameObjects = new std::vector<GameObject*>();
 
 	resourcesMamanger = new ResourcesManager();

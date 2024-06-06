@@ -62,6 +62,7 @@ public:
 
     void init(int argc, char ** argv);
     void init_gui();
+    void render_splash();
     void run();
     void shutdown();
 
