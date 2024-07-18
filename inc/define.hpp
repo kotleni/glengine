@@ -11,6 +11,7 @@
 #elif defined(__linux__)
     #define OS_LINUX
 #elif defined(__APPLE__) && defined(__MACH__)
+    #warning MacOS support is unstable yet.
     #define OS_MACOS
 #elif defined(unix) || defined(__unix__) || defined(__unix)
     #define OS_UNIX
