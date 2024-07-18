@@ -293,6 +293,8 @@ void Engine::on_render() {
 
 int selectedIndex = -1;
 void Engine::on_render_gui() {
+	const int v_docks_width = 260;
+
     ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame();
 
@@ -301,8 +303,8 @@ void Engine::on_render_gui() {
 	// TODO: allow toggle bar in non tool mode
 	if(props.is_tools_mode) {
 		auto io = ImGui::GetIO();
-		ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 220, 0));
-		ImGui::SetNextWindowSize(ImVec2(220, io.DisplaySize.y));
+		ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - v_docks_width, 0));
+		ImGui::SetNextWindowSize(ImVec2(v_docks_width, io.DisplaySize.y));
 		
 		ImGui::Begin("Misc", nullptr,
 			ImGuiWindowFlags_MenuBar | 
@@ -320,7 +322,7 @@ void Engine::on_render_gui() {
 
 		ImGui::BeginTabBar("Misc");
 			if(ImGui::BeginTabItem("Settings")) {
-				ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
+				ImGui::SliderInt("FPS", &props.max_fps, 15, 180);
 				ImGui::Checkbox("Light", &props.is_render_light);
 				ImGui::Checkbox("Vsync", &props.is_vsync);
 				ImGui::EndTabItem();
@@ -337,7 +339,7 @@ void Engine::on_render_gui() {
 	if(props.is_tools_mode) {
 		auto io = ImGui::GetIO();
 		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize(ImVec2(220, io.DisplaySize.y));
+		ImGui::SetNextWindowSize(ImVec2(v_docks_width, io.DisplaySize.y));
 
 		ImGui::Begin("Game objects", nullptr,
 			ImGuiWindowFlags_MenuBar | 
