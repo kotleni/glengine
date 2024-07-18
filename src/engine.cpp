@@ -84,8 +84,11 @@ void Engine::init(int argc, char ** argv) {
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
-	glEnable              ( GL_DEBUG_OUTPUT );
-	glDebugMessageCallback( MessageCallback, 0 );
+	#ifndef OS_MACOS
+		// INFO: macOS don't support debug opengl
+		glEnable              ( GL_DEBUG_OUTPUT );
+		glDebugMessageCallback( MessageCallback, 0 );
+	#endif
 }
 
 void Engine::init_gui() {
