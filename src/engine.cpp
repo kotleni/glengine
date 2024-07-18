@@ -114,6 +114,8 @@ void Engine::init_gui() {
 	// Setup Platform/Renderer backends
 	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 }
 
 void Engine::render_splash() {
@@ -296,16 +298,64 @@ void Engine::on_render_gui() {
 
 	ImGui::NewFrame();
 
+	// TODO: allow toggle bar in non tool mode
 	if(props.is_tools_mode) {
-		ImGui::Begin("Debug", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)",
-			1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		auto io = ImGui::GetIO();
+		ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - 220, 0));
+		ImGui::SetNextWindowSize(ImVec2(220, io.DisplaySize.y));
+		
+		ImGui::Begin("Misc", nullptr,
+			ImGuiWindowFlags_MenuBar | 
+			ImGuiWindowFlags_AlwaysAutoResize | 
+			ImGuiWindowFlags_NoBringToFrontOnFocus | 
+            ImGuiWindowFlags_NoNavFocus |                                        
+            ImGuiWindowFlags_NoDocking |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoCollapse
+			);
+
+		ImGui::DockSpace(ImGui::GetID("Dockspace1"), ImVec2(0.0f, 0.0f),  ImGuiDockNodeFlags_PassthruCentralNode);
+
+		ImGui::BeginTabBar("Misc");
+			if(ImGui::BeginTabItem("Settings")) {
+				ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
+				ImGui::Checkbox("Light", &props.is_render_light);
+				ImGui::Checkbox("Vsync", &props.is_vsync);
+				ImGui::EndTabItem();
+			}
+			if(ImGui::BeginTabItem("Debug")) {
+				ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+				ImGui::EndTabItem();
+			}
+		ImGui::EndTabBar();
+
 		ImGui::End();
 	}
 
 	if(props.is_tools_mode) {
-		ImGui::Begin("Game objects", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-		if(this->gameObjects->size() > 0) {
+		auto io = ImGui::GetIO();
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::SetNextWindowSize(ImVec2(220, io.DisplaySize.y));
+
+		ImGui::Begin("Game objects", nullptr,
+			ImGuiWindowFlags_MenuBar | 
+			ImGuiWindowFlags_AlwaysAutoResize | 
+			ImGuiWindowFlags_NoBringToFrontOnFocus | 
+            ImGuiWindowFlags_NoNavFocus |                                        
+            ImGuiWindowFlags_NoDocking |
+            ImGuiWindowFlags_NoResize |
+            ImGuiWindowFlags_NoMove |
+			ImGuiWindowFlags_NoTitleBar |
+            ImGuiWindowFlags_NoCollapse
+			);
+			  
+		ImGui::DockSpace(ImGui::GetID("Dockspace2"), ImVec2(0.0f, 0.0f),  ImGuiDockNodeFlags_PassthruCentralNode);
+
+		if (ImGui::BeginTabBar("Tab1")) {
+			if(ImGui::BeginTabItem("Objects")) {
+				if(this->gameObjects->size() > 0) {
 			for(int i = 0; i < this->gameObjects->size(); i +=1) {
 				GameObject *gObj = this->gameObjects->at(i);
 
@@ -328,17 +378,16 @@ void Engine::on_render_gui() {
 		} else {
 			ImGui::Text("Empty list");
 		}
-		ImGui::End();
-	}
-
-	// Game object editor
-	if(props.is_tools_mode && selectedIndex != -1) {
+		ImGui::EndTabItem();
+			}
+                if (ImGui::BeginTabItem("Editor")) {
+					if(props.is_tools_mode && selectedIndex != -1) {
 		GameObject *gObj = this->gameObjects->at(selectedIndex);
 
 		float *position = new float[] { gObj->position.x, gObj->position.y, gObj->position.z };
 		float *scale = new float[] { gObj->scale.x, gObj->scale.y, gObj->scale.z };
 
-		ImGui::Begin(gObj->name.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+		//ImGui::Begin(gObj->name.c_str(), nullptr, ImGuiWindowFlags_DockNodeHost);
 		if(ImGui::InputFloat3("Position", position)) {
 			gObj->position.x = position[0];
 			gObj->position.y = position[1];
@@ -354,14 +403,16 @@ void Engine::on_render_gui() {
 			this->gameObjects->erase(this->gameObjects->begin() + selectedIndex);
 			selectedIndex = -1;
 		}
+	}
+                    ImGui::EndTabItem();
+                }
+				
+                ImGui::EndTabBar();
+            }
+
+		
 		ImGui::End();
 	}
-
-	ImGui::Begin("Settings", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	ImGui::SliderInt("Max fps", &props.max_fps, 15, 200);
-	ImGui::Checkbox("Light", &props.is_render_light);
-	ImGui::Checkbox("Vsync", &props.is_vsync);
-	ImGui::End();
 
 	// Rendering
 	ImGui::Render();
