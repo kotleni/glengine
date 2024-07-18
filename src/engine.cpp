@@ -70,15 +70,11 @@ void Engine::init(int argc, char ** argv) {
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
-		SDL_WINDOW_OPENGL 
-		| SDL_WINDOW_RESIZABLE 
-		#ifndef OS_MACOS // INFO: macos have some problems with it
-			| SDL_WINDOW_ALLOW_HIGHDPI
-		#endif
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
 	);
-	glm::vec2 render_size = this->get_render_size();
+	glm::vec2 window_size = glm::vec2(1200, 800);
 	window = SDL_CreateWindow(ENGINE_NAME,
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, render_size.x, render_size.y,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size.x, window_size.y,
 		window_flags);
 	gl_context = SDL_GL_CreateContext(window);
 
@@ -108,9 +104,13 @@ void Engine::init_gui() {
 
 	// Setup Dear ImGui style
 	ImGui::StyleColorsDark();
-	//ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize, ImVec2(0, 0));
-	// ImGui::StyleColorsClassic();
-
+	
+	// FIXME: engine has big problems with HighDPI rendering
+	// FIXME: Temporary hack for macOS retina
+	#ifdef OS_MACOS
+		ImGui::GetStyle().ScaleAllSizes(0.5);
+	#endif
+	
 	// Setup Platform/Renderer backends
 	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
@@ -383,5 +383,7 @@ void Engine::shutdown() {
 }
 
 glm::vec2 Engine::get_render_size() {
-	return glm::vec2(1600, 800);
+	int w, h;
+	SDL_GL_GetDrawableSize(this->window, &w, &h);
+	return glm::vec2(w, h);
 }
