@@ -329,6 +329,7 @@ void Engine::on_render_gui() {
 			}
 			if(ImGui::BeginTabItem("Debug")) {
 				ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
+				ImGui::Text("DPI Scale: %.1f", ImGui::GetPlatformIO().Monitors[0].DpiScale);
 				ImGui::EndTabItem();
 			}
 		ImGui::EndTabBar();
