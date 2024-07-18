@@ -4,6 +4,11 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
+# Detect constants
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    set(MACOSX TRUE)
+endif()
+
 # Prerequisites
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
@@ -11,6 +16,15 @@ find_package(Threads REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
+find_package(GLEW REQUIRED)
+
+# macOS should get gl and sdl2 from frameworks
+if(MACOSX)
+    list(APPEND EXTRA_LIBS
+            "-framework OpenGL"
+            "-framework SDL2"
+            )
+endif()
 
 # Source Files
 add_executable(${PROJECT_NAME}
@@ -38,6 +52,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${SDL2_INCLUDE_DIRS}
 	${OPENGL_INCLUDE_DIR}
 	${GLUT_INCLUDE_DIRS}
+	${ASSIMP_INCLUDE_DIRS}
+	${GLEW_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/inc
 	${CMAKE_SOURCE_DIR}/inc/imgui
 	${CMAKE_SOURCE_DIR}/inc/imgui/backends)
@@ -66,16 +82,19 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	-pg
 	-g)
 
-# Link Libraries (Linux Hacks)
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
-target_link_libraries(${PROJECT_NAME} PRIVATE GL)
-target_link_libraries(${PROJECT_NAME} PRIVATE GLEW) 
-target_link_libraries(${PROJECT_NAME} PRIVATE assimp) 	
+target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
+
+# Link libraries
+if(!MACOSX) # macOS should use GL from frameworks
+	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
+endif()
 
 # Standard Link Libraries
 target_link_libraries(${PROJECT_NAME} PRIVATE
 	${SDL2_LIBRARIES}
-	${OPENGL_INCLUDE_DIR}
+	${OPENGL_INCLUDE_DIR} # FIXME: what? includes in linking?
 	dl
 	)
 
