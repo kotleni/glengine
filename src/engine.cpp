@@ -70,7 +70,12 @@ void Engine::init(int argc, char ** argv) {
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
-		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
+		SDL_WINDOW_OPENGL 
+		| SDL_WINDOW_RESIZABLE 
+		#ifndef OS_MACOS // INFO: macos have some problems with it
+			| SDL_WINDOW_ALLOW_HIGHDPI
+		#endif
+	);
 	glm::vec2 render_size = this->get_render_size();
 	window = SDL_CreateWindow(ENGINE_NAME,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, render_size.x, render_size.y,
