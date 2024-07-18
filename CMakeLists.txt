@@ -33,7 +33,7 @@ add_executable(${PROJECT_NAME}
 	inc/imgui/imgui_draw.cpp
 	inc/imgui/imgui_tables.cpp
 	inc/imgui/imgui_widgets.cpp
-	inc/imgui/backends/imgui_impl_sdl.cpp
+	inc/imgui/backends/imgui_impl_sdl2.cpp
     inc/imgui/backends/imgui_impl_opengl3.cpp
 
 	src/shader.cpp
