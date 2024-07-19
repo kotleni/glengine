@@ -264,7 +264,7 @@ void Engine::on_render() {
 		camera->update();
 	}
 
-    glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
+    glViewport(260 * 2, 0, this->get_render_size().x - ((260 + 260) * 2), this->get_render_size().y);
 	glClearColor(clear_color.x * clear_color.w,
 			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
 			clear_color.w);
