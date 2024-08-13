@@ -37,7 +37,6 @@ void Engine::init(int argc, char ** argv) {
 	const std::vector<std::string> str_args(argv + 1, argv + argc);
 
 	args::ArgumentParser parser("Engine", "Description here");
-    args::Flag tools(parser, "tools", "Disable ticks and enable developer tools in game.", {"tools"});
     args::Flag vsync(parser, "vsync", "Enable V-Sync in render loop.", {"vsync"});
 
 	std::vector<std::string>::const_iterator args = parser.ParseArgs(str_args);
@@ -45,7 +44,11 @@ void Engine::init(int argc, char ** argv) {
 	// Init props default values
 	props.is_vsync = bool{vsync};
 	props.max_fps = 200;
-	props.is_tools_mode = bool{tools};
+	#ifdef ENABLE_TOOLS
+		props.is_tools_mode = true;
+	#else
+		props.is_tools_mode = bool{tools};
+	#endif
 	props.is_render_light = true;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=

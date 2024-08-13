@@ -4,6 +4,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
+# Defines
+# TODO: if/add is really needed?
+if(ENABLE_TOOLS)
+	add_compile_definitions(ENABLE_TOOLS)
+endif()
+
 # Detect constants
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     set(MACOSX TRUE)
