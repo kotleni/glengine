@@ -168,10 +168,8 @@ void Engine::run() {
 
 	texturedShader = resourcesMamanger->getShader("textured");
 
-	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/Castle OBJ.obj");
+	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/castle.obj");
 	gameObjects->push_back(castleObj);
-	GameObject *tvObj = new GameObject(resourcesMamanger, "../assets/models/TV/uploads_files_2941243_retrotv0319.obj");
-	gameObjects->push_back(tvObj);
 
 	glm::vec2 render_size = engine()->get_render_size();
 	camera = new Camera(render_size);
@@ -372,7 +370,8 @@ void Engine::on_render_gui() {
 				}
 
 				// Name
-				ImGui::Text("%s", gObj->name.c_str());
+				std::filesystem::path path(gObj->name);
+				ImGui::Text("%s", path.filename().c_str());
 
 				// Select btn
 				if(selectedIndex != i) {
