@@ -86,8 +86,9 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
 
+
 # Link libraries
-if(!MACOSX) # macOS should use GL from frameworks
+if(NOT MACOSX) # macOS should use GL from frameworks
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
 
