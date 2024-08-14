@@ -51,7 +51,6 @@ private:
     Renderer *renderer;
     ImGuiIO io;
     bool is_runing;
-    ImVec4 clear_color;
 
     std::vector<GameObject*> *gameObjects;
 public:
@@ -68,8 +67,6 @@ public:
     void render_splash();
     void run();
     void shutdown();
-
-    glm::vec2 get_render_size();
 };
 
 static Engine *instance;

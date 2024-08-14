@@ -126,9 +126,7 @@ void Engine::init_gui() {
 void Engine::render_splash() {
 	// NOTE: Double render, not shown at first
 	for(int i = 0; i < 2; i += 1) {
-		glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
-		glClearColor(1, 1, 1, 1);
-		glClear(GL_COLOR_BUFFER_BIT);
+		this->renderer->beginFrame();
 
 		SDL_Event event;
 		while(SDL_PollEvent(&event)) {
@@ -136,22 +134,23 @@ void Engine::render_splash() {
 		}
 
 		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
+		{
+			ImGui_ImplSDL2_NewFrame();
 
-		ImGui::NewFrame();
+			ImGui::NewFrame();
 
-		ImGui::Begin("Engine", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-			ImGui::Text("Loading...");
-			// ImGui::SameLine(0);
-			ImGui::ProgressBar(100, ImVec2(200, 0));
-		ImGui::End();
+			ImGui::Begin("Engine", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
+				ImGui::Text("Loading...");
+				ImGui::ProgressBar(100, ImVec2(200, 0));
+			ImGui::End();
 
-		// Rendering
-		ImGui::Render();
-    	auto raw = ImGui::GetDrawData();
-    	ImGui_ImplOpenGL3_RenderDrawData(raw);
+			// Rendering
+			ImGui::Render();
+    		auto raw = ImGui::GetDrawData();
+    		ImGui_ImplOpenGL3_RenderDrawData(raw);
+		}
 
-		SDL_GL_SwapWindow(window);
+		this->renderer->endFrame();
 	}
 }
 
@@ -173,14 +172,13 @@ void Engine::run() {
 	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/castle.obj");
 	gameObjects->push_back(castleObj);
 
-	glm::vec2 render_size = engine()->get_render_size();
+	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
 
     directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
 	skybox = new Skybox();
 	skybox->load("skybox1");
 
-    clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
     is_runing = true;
 
     while (is_runing) {
@@ -197,11 +195,14 @@ void Engine::run() {
                 on_event(&event);
 		}
 
-        on_render();
-        on_render_gui();
+		this->renderer->beginFrame();
+		{
+			on_render();
+        	on_render_gui();
+		}
+        this->renderer->endFrame();
 
-        SDL_GL_SwapWindow(window);
-
+		// TODO: move to renderer endFrame
 		// FPS cap
 		if(!props.is_vsync) {
 			SDL_Delay(1000 / props.max_fps);
@@ -266,12 +267,6 @@ void Engine::on_render() {
 		// Update camera
 		camera->update();
 	}
-
-    glViewport(0, 0, this->get_render_size().x, this->get_render_size().y);
-	glClearColor(clear_color.x * clear_color.w,
-			clear_color.y * clear_color.w, clear_color.z * clear_color.w,
-			clear_color.w);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw skybox
 	skybox->draw(camera);
@@ -440,10 +435,4 @@ void Engine::shutdown() {
 	SDL_GL_DeleteContext(this->renderer->getGLContext());
 	SDL_DestroyWindow(window);
 	SDL_Quit();
-}
-
-glm::vec2 Engine::get_render_size() {
-	int w, h;
-	SDL_GL_GetDrawableSize(this->window, &w, &h);
-	return glm::vec2(w, h);
 }
