@@ -79,9 +79,11 @@ void Engine::init(int argc, char ** argv) {
 	window = SDL_CreateWindow(ENGINE_NAME,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size.x, window_size.y,
 		window_flags);
-	gl_context = SDL_GL_CreateContext(window);
+	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
 	SDL_GL_MakeCurrent(window, gl_context);
+
+	this->renderer = new Renderer(window, gl_context);
 
 	// Glew
 	glewExperimental = GL_TRUE; 
@@ -115,7 +117,7 @@ void Engine::init_gui() {
 	#endif
 	
 	// Setup Platform/Renderer backends
-	ImGui_ImplSDL2_InitForOpenGL(window, gl_context);
+	ImGui_ImplSDL2_InitForOpenGL(window, this->renderer->getGLContext());
 	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
 
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -433,7 +435,9 @@ void Engine::shutdown() {
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
 
-	SDL_GL_DeleteContext(gl_context);
+	renderer->shutdown();
+	renderer = nullptr;
+	SDL_GL_DeleteContext(this->renderer->getGLContext());
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }

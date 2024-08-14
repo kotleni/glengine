@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
+add_subdirectory(renderer/)
+
 # Defines
 # TODO: if/add is really needed?
 if(ENABLE_TOOLS)
@@ -62,7 +64,10 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${GLEW_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/inc
 	${CMAKE_SOURCE_DIR}/inc/imgui
-	${CMAKE_SOURCE_DIR}/inc/imgui/backends)
+	${CMAKE_SOURCE_DIR}/inc/imgui/backends
+	
+	renderer/include/
+)
 
 # Compiler Options
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -103,6 +108,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${SDL2_LIBRARIES}
 	${OPENGL_INCLUDE_DIR} # FIXME: what? includes in linking?
 	dl
+	renderer
 	)
 
 # # Post Build Directories

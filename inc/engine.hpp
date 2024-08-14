@@ -39,6 +39,7 @@
 #include "skybox.hpp"
 #include "resources_manager.hpp"
 #include "game_object.hpp"
+#include <renderer/renderer.hpp>
 
 class Engine {
 private:
@@ -47,7 +48,7 @@ private:
     void on_render_gui();
 
     SDL_Window *window;
-    SDL_GLContext gl_context;
+    Renderer *renderer;
     ImGuiIO io;
     bool is_runing;
     ImVec4 clear_color;
