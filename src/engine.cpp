@@ -157,9 +157,6 @@ void Engine::render_splash() {
 void Engine::run() {
 	render_splash();
 
-	if(props.is_vsync)
-		SDL_GL_SetSwapInterval(1); // Enable vsync
-
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
 	this->gameObjects = new std::vector<GameObject*>();
@@ -175,7 +172,6 @@ void Engine::run() {
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
 
-    directionalLight = new DirectionalLight(glm::vec3(1.0f, -1.0f, -0.3f));
 	skybox = new Skybox();
 	skybox->load("skybox1");
 
@@ -200,13 +196,7 @@ void Engine::run() {
 			on_render();
         	on_render_gui();
 		}
-        this->renderer->endFrame();
-
-		// TODO: move to renderer endFrame
-		// FPS cap
-		if(!props.is_vsync) {
-			SDL_Delay(1000 / props.max_fps);
-		}
+        this->renderer->endFrame(props.max_fps, props.is_vsync);
     }
 
     shutdown();
@@ -420,8 +410,6 @@ void Engine::on_render_gui() {
 	ImGui::Render();
     auto raw = ImGui::GetDrawData();
     ImGui_ImplOpenGL3_RenderDrawData(raw);
-
-	SDL_GL_SetSwapInterval(props.is_vsync);
 }
 
 void Engine::shutdown() {

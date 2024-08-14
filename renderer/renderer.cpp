@@ -34,6 +34,20 @@ void Renderer::beginFrame() {
 	glClear(clearMask);
 }
 
-void Renderer::endFrame() {
+void Renderer::endFrame(int fpsMax, bool enableVsync) {
     SDL_GL_SwapWindow(window);
+
+    SDL_GL_SetSwapInterval(enableVsync);
+
+    // FPS cap
+	if(!enableVsync) {
+		SDL_Delay(1000 / fpsMax);
+	}
+}
+
+// TODO: i need to make universal Light abstract class for all lights
+// TODO: and put here is struct? or smthing
+void Renderer::createLight(glm::vec3 position) {
+    DirectionalLight directional = new DirectionalLight(position);
+    this->lights.push_back(directional);
 }

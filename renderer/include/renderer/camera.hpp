@@ -6,7 +6,7 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include "shader.hpp"
+#include "renderer/shader.hpp"
 
 class Camera {
 private:

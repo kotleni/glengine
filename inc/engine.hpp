@@ -31,12 +31,12 @@
 // clang-format on
 
 #include "define.hpp"
-#include "shader.hpp"
+#include "renderer/shader.hpp"
 #include "engine_props.hpp"
-#include "camera.hpp"
+#include "renderer/camera.hpp"
 #include "model.hpp"
-#include "directional_light.hpp"
-#include "skybox.hpp"
+#include "renderer/directional_light.hpp"
+#include "renderer/skybox.hpp"
 #include "resources_manager.hpp"
 #include "game_object.hpp"
 #include <renderer/renderer.hpp>
@@ -55,9 +55,6 @@ private:
     std::vector<GameObject*> *gameObjects;
 public:
     EngineProps props;
-
-    DirectionalLight *directionalLight;
-
     ResourcesManager *resourcesMamanger;
 
     Engine();

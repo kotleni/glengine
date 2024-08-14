@@ -44,16 +44,15 @@ add_executable(${PROJECT_NAME}
 	inc/imgui/backends/imgui_impl_sdl2.cpp
     inc/imgui/backends/imgui_impl_opengl3.cpp
 
-	src/shader.cpp
 	src/mesh.cpp
 	src/model.cpp
 	src/engine.cpp
 	src/camera.cpp
-	src/directional_light.cpp
 	src/skybox.cpp
 	src/game_object.cpp
 	src/resources_manager.cpp
-	src/main.cpp)
+	src/main.cpp
+)
 
 # Include Directories
 target_include_directories(${PROJECT_NAME} PRIVATE

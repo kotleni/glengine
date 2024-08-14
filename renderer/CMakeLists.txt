@@ -15,6 +15,10 @@ if(MACOSX)
 endif()
 
 add_library(${PROJECT_NAME}
+	shader.cpp
+	directional_light.cpp
+	skybox.cpp
+	camera.cpp
     renderer.cpp
 )
 
