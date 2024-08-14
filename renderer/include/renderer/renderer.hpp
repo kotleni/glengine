@@ -10,6 +10,13 @@ private:
 public:
     Renderer(SDL_Window *window, SDL_GLContext gl_context);
     void shutdown();
+
+    /***
+     * Get actual sdl opengl context.
+     * 
+     * @deprecated Renderer should'nt present any internal things
+     * @return Actual SDL_GLContext
+     * ***/
     SDL_GLContext getGLContext();
 };
 
