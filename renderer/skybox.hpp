@@ -3,9 +3,9 @@
 
 #include <string>
 #include <GL/glew.h>
-#include <SDL_opengl.h>
-#include "renderer/shader.hpp"
-#include "renderer/camera.hpp"
+#include <SDL2/SDL_opengl.h>
+#include "shader.hpp"
+#include "camera.hpp"
 
 class Skybox {
 private:

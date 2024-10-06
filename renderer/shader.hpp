@@ -2,7 +2,7 @@
 #define H_SHADER
 
 #include <GL/glew.h>
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 #include <string>
 #include <vector>
 #include <iostream>

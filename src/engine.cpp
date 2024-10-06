@@ -12,10 +12,7 @@
 int moveFront = 0;
 int moveRight = 0;
 
-Shader* texturedShader;
-
 Camera *camera;
-Skybox *skybox;
 
 Engine::Engine() {
 	instance = this;
@@ -47,7 +44,7 @@ void Engine::init(int argc, char ** argv) {
 	#ifdef ENABLE_TOOLS
 		props.is_tools_mode = true;
 	#else
-		props.is_tools_mode = bool{tools};
+		props.is_tools_mode = false;
 	#endif
 	props.is_render_light = true;
 
@@ -83,8 +80,6 @@ void Engine::init(int argc, char ** argv) {
 
 	SDL_GL_MakeCurrent(window, gl_context);
 
-	this->renderer = new Renderer(window, gl_context);
-
 	// Glew
 	glewExperimental = GL_TRUE; 
 	glewInit();
@@ -95,6 +90,8 @@ void Engine::init(int argc, char ** argv) {
 		glEnable              ( GL_DEBUG_OUTPUT );
 		glDebugMessageCallback( MessageCallback, 0 );
 	#endif
+
+	this->renderer = new Renderer(window, gl_context);
 }
 
 void Engine::init_gui() {
@@ -150,7 +147,7 @@ void Engine::render_splash() {
     		ImGui_ImplOpenGL3_RenderDrawData(raw);
 		}
 
-		this->renderer->endFrame();
+		this->renderer->endFrame(this->props.max_fps, this->props.is_vsync);
 	}
 }
 
@@ -164,16 +161,14 @@ void Engine::run() {
 	resourcesMamanger = new ResourcesManager();
 	resourcesMamanger->loadAll();
 
-	texturedShader = resourcesMamanger->getShader("textured");
+	Shader *defaultShader = resourcesMamanger->getShader("textured");
+	renderer->setDefaultShader(defaultShader);
 
 	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/castle.obj");
 	gameObjects->push_back(castleObj);
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
-
-	skybox = new Skybox();
-	skybox->load("skybox1");
 
     is_runing = true;
 
@@ -258,25 +253,16 @@ void Engine::on_render() {
 		camera->update();
 	}
 
-	// Draw skybox
-	skybox->draw(camera);
-
- 	texturedShader->use();
-
-	// Props bind
-	texturedShader->setBool("features.is_use_light", props.is_render_light);
-
-	// Camera bind
-	camera->applyToShader(texturedShader);
-
-	// Light bind
-	directionalLight->apply(texturedShader);
-
-	// Draw
+	std::vector<Renderable> renderables;
+	// Preapre array of renderables
 	for(int i = 0; i < this->gameObjects->size(); i +=1) {
 		GameObject *gObj = this->gameObjects->at(i);
-		gObj->draw(camera, texturedShader);
+		Model *model = gObj->getModel();
+		Renderable renderable = { model, gObj->position, gObj->scale };
+		renderables.push_back(renderable);
 	}
+
+	renderer->renderFrame(camera, renderables, props.is_render_light);
 }
 
 int selectedIndex = -1;

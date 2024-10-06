@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
+#include <GL/glew.h>
 #include <GL/gl.h>
 
 #define GLM_ENABLE_EXPERIMENTAL
@@ -11,7 +12,10 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include <renderer/directional_light.hpp>
+#include <directional_light.hpp>
+#include <skybox.hpp>
+
+#include <renderable.hpp>
 
 class Renderer {
 private:
@@ -21,6 +25,8 @@ private:
     glm::vec4 clearColor;
     bool isEnableDepthBuffer;
 
+    Shader *defaultShader;
+    Skybox *skybox;
     std::vector<DirectionalLight> lights;
 public:
     Renderer(SDL_Window *window, SDL_GLContext gl_context);
@@ -36,7 +42,10 @@ public:
 
     glm::vec2 get_render_size();
 
+    void setDefaultShader(Shader *shader);
+
     void beginFrame();
+    void renderFrame(Camera *camera, std::vector<Renderable> renderables, bool isRenderLight);
     void endFrame(int fpsMax, bool enableVsync);
 
     void createLight(glm::vec3 position);

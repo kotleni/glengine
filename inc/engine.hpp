@@ -24,22 +24,22 @@
 // clang-format off
 #include <SDL2/SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <SDL_opengles2.h>
+#include <SDL2/SDL_opengles2.h>
 #else
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 #endif
 // clang-format on
 
 #include "define.hpp"
-#include "renderer/shader.hpp"
+#include "shader.hpp"
 #include "engine_props.hpp"
-#include "renderer/camera.hpp"
+#include "camera.hpp"
 #include "model.hpp"
-#include "renderer/directional_light.hpp"
-#include "renderer/skybox.hpp"
+#include "directional_light.hpp"
+#include <skybox.hpp>
 #include "resources_manager.hpp"
 #include "game_object.hpp"
-#include <renderer/renderer.hpp>
+#include <renderer.hpp>
 
 class Engine {
 private:

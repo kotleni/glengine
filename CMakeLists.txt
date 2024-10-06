@@ -44,11 +44,7 @@ add_executable(${PROJECT_NAME}
 	inc/imgui/backends/imgui_impl_sdl2.cpp
     inc/imgui/backends/imgui_impl_opengl3.cpp
 
-	src/mesh.cpp
-	src/model.cpp
 	src/engine.cpp
-	src/camera.cpp
-	src/skybox.cpp
 	src/game_object.cpp
 	src/resources_manager.cpp
 	src/main.cpp
@@ -65,7 +61,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_SOURCE_DIR}/inc/imgui
 	${CMAKE_SOURCE_DIR}/inc/imgui/backends
 	
-	renderer/include/
+	common/
+	renderer/
 )
 
 # Compiler Options

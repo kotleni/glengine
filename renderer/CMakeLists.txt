@@ -20,6 +20,8 @@ add_library(${PROJECT_NAME}
 	skybox.cpp
 	camera.cpp
     renderer.cpp
+	model.cpp
+	mesh.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -29,7 +31,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${ASSIMP_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
     
-    include/
+	../common
+    ./
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
