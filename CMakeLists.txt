@@ -36,13 +36,13 @@ endif()
 
 # Source Files
 add_executable(${PROJECT_NAME}
-	inc/imgui/imgui.cpp
-	inc/imgui/imgui_demo.cpp
-	inc/imgui/imgui_draw.cpp
-	inc/imgui/imgui_tables.cpp
-	inc/imgui/imgui_widgets.cpp
-	inc/imgui/backends/imgui_impl_sdl2.cpp
-    inc/imgui/backends/imgui_impl_opengl3.cpp
+	thirdparty/imgui/imgui.cpp
+	thirdparty/imgui/imgui_demo.cpp
+	thirdparty/imgui/imgui_draw.cpp
+	thirdparty/imgui/imgui_tables.cpp
+	thirdparty/imgui/imgui_widgets.cpp
+	thirdparty/imgui/backends/imgui_impl_sdl2.cpp
+    thirdparty/imgui/backends/imgui_impl_opengl3.cpp
 
 	src/engine.cpp
 	src/game_object.cpp
@@ -60,6 +60,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_SOURCE_DIR}/inc
 	${CMAKE_SOURCE_DIR}/inc/imgui
 	${CMAKE_SOURCE_DIR}/inc/imgui/backends
+
+	thirdparty/imgui/
 	
 	common/
 	renderer/
