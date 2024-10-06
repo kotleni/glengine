@@ -75,8 +75,8 @@ void Renderer::renderFrame(Camera *camera, std::vector<Renderable> renderables, 
 	    defaultShader->setMat4("model", model);
 
         // Material bind
-	    defaultShader->setVec3("material.ambient", glm::vec3(0.3f, 0.3f, 0.3f));
-	    defaultShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.6f));
+	    defaultShader->setVec3("material.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
+	    defaultShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.3f));
 	    defaultShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
 	    defaultShader->setFloat("material.shininess", 76.8f);
 
