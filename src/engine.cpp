@@ -30,6 +30,11 @@ MessageCallback( GLenum source,
   fprintf( stderr, "GL: %s\n", message );
 }
 
+bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority) {
+	// TODO: Check is context is not null from if (!engine().)
+	// 	return true;
+}
+
 void Engine::init(int argc, char ** argv) {
 	const std::vector<std::string> str_args(argv + 1, argv + argc);
 
@@ -95,60 +100,49 @@ void Engine::init(int argc, char ** argv) {
 }
 
 void Engine::init_gui() {
-    // Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	io = ImGui::GetIO();
-	(void)io;
-	// io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable
-	// Keyboard Controls io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; //
-	// Enable Gamepad Controls
+	glm::vec2 render_size = engine()->renderer->get_render_size();
 
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	
-	// FIXME: engine has big problems with HighDPI rendering
-	// FIXME: Temporary hack for macOS retina
-	#ifdef OS_MACOS
-		ImGui::GetStyle().ScaleAllSizes(0.5);
-	#endif
-	
-	// Setup Platform/Renderer backends
-	ImGui_ImplSDL2_InitForOpenGL(window, this->renderer->getGLContext());
-	ImGui_ImplOpenGL3_Init(ENGINE_GLSL_VERSION);
+	if (!Backend::Initialize(render_size.x, render_size.y, renderer->getSDLWindow(), renderer->getGLContext()))
+	{
+		// TODO: Crash
+		std::cout << "PANIC: Backend::Initialize return false\n";
+		return;
+	}
 
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	// Install the custom interfaces constructed by the backend before initializing RmlUi.
+	Rml::SetSystemInterface(Backend::GetSystemInterface());
+	Rml::SetRenderInterface(Backend::GetRenderInterface());
+
+	// RmlUi initialisation.
+	Rml::Initialise();
+
+	rmlContext = Rml::CreateContext("default", Rml::Vector2i(render_size.x, render_size.y));
+
+	// Load all fonts
+	const Rml::String directory = "../assets/ui/fonts/";
+
+	struct FontFace {
+		const char* filename;
+		bool fallback_face;
+	};
+	FontFace font_faces[] = {
+		{"LatoLatin-Regular.ttf", false},
+		{"LatoLatin-Italic.ttf", false},
+		{"LatoLatin-Bold.ttf", false},
+		{"LatoLatin-BoldItalic.ttf", false},
+	};
+
+	for (const FontFace& face : font_faces)
+		Rml::LoadFontFace(directory + face.filename, face.fallback_face);
+
+	// Console
+	Rml::ElementDocument* consoleDocument = rmlContext->LoadDocument("../assets/ui/layouts/console.rml");
+	if (consoleDocument)
+		consoleDocument->Show();
 }
 
 void Engine::render_splash() {
-	// NOTE: Double render, not shown at first
-	for(int i = 0; i < 2; i += 1) {
-		this->renderer->beginFrame();
-
-		SDL_Event event;
-		while(SDL_PollEvent(&event)) {
-			ImGui_ImplSDL2_ProcessEvent(&event);
-		}
-
-		ImGui_ImplOpenGL3_NewFrame();
-		{
-			ImGui_ImplSDL2_NewFrame();
-
-			ImGui::NewFrame();
-
-			ImGui::Begin("Engine", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-				ImGui::Text("Loading...");
-				ImGui::ProgressBar(100, ImVec2(200, 0));
-			ImGui::End();
-
-			// Rendering
-			ImGui::Render();
-    		auto raw = ImGui::GetDrawData();
-    		ImGui_ImplOpenGL3_RenderDrawData(raw);
-		}
-
-		this->renderer->endFrame(this->props.max_fps, this->props.is_vsync);
-	}
+	// TODO: Impl rendering loading splash
 }
 
 void Engine::run() {
@@ -175,7 +169,6 @@ void Engine::run() {
     while (is_runing) {
 		SDL_Event event;
 		while (SDL_PollEvent(&event)) {
-			ImGui_ImplSDL2_ProcessEvent(&event);
 			if (event.type == SDL_QUIT)
 				is_runing = false;
 			else if (event.type == SDL_WINDOWEVENT &&
@@ -185,6 +178,13 @@ void Engine::run() {
             else
                 on_event(&event);
 		}
+
+		// TODO: Blocking usage, what a /??
+		// if(!Backend::ProcessEvents(rmlContext, nullptr, true)) {
+		// 	// TODO: Rquested close
+		// }
+
+		rmlContext->Update();
 
 		this->renderer->beginFrame();
 		{
@@ -265,144 +265,15 @@ void Engine::on_render() {
 	renderer->renderFrame(camera, renderables, props.is_render_light);
 }
 
-int selectedIndex = -1;
 void Engine::on_render_gui() {
-	const int v_docks_width = 260;
-
-    ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-
-	ImGui::NewFrame();
-
-	// TODO: allow toggle bar in non tool mode
-	if(props.is_tools_mode) {
-		auto io = ImGui::GetIO();
-		ImGui::SetNextWindowPos(ImVec2(io.DisplaySize.x - v_docks_width, 0));
-		ImGui::SetNextWindowSize(ImVec2(v_docks_width, io.DisplaySize.y));
-		
-		ImGui::Begin("Misc", nullptr,
-			ImGuiWindowFlags_MenuBar | 
-			ImGuiWindowFlags_AlwaysAutoResize | 
-			ImGuiWindowFlags_NoBringToFrontOnFocus | 
-            ImGuiWindowFlags_NoNavFocus |                                        
-            ImGuiWindowFlags_NoDocking |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoCollapse
-			);
-
-		ImGui::DockSpace(ImGui::GetID("Dockspace1"), ImVec2(0.0f, 0.0f),  ImGuiDockNodeFlags_PassthruCentralNode);
-
-		ImGui::BeginTabBar("Misc");
-			if(ImGui::BeginTabItem("Settings")) {
-				ImGui::SliderInt("FPS", &props.max_fps, 15, 180);
-				ImGui::Checkbox("Light", &props.is_render_light);
-				ImGui::Checkbox("Vsync", &props.is_vsync);
-				ImGui::EndTabItem();
-			}
-			if(ImGui::BeginTabItem("Debug")) {
-				ImGui::Text("FPS: %.1f", ImGui::GetIO().Framerate);
-				ImGui::Text("DPI Scale: %.1f", ImGui::GetPlatformIO().Monitors[0].DpiScale);
-				ImGui::EndTabItem();
-			}
-		ImGui::EndTabBar();
-
-		ImGui::End();
-	}
-
-	if(props.is_tools_mode) {
-		auto io = ImGui::GetIO();
-		ImGui::SetNextWindowPos(ImVec2(0, 0));
-		ImGui::SetNextWindowSize(ImVec2(v_docks_width, io.DisplaySize.y));
-
-		ImGui::Begin("Game objects", nullptr,
-			ImGuiWindowFlags_MenuBar | 
-			ImGuiWindowFlags_AlwaysAutoResize | 
-			ImGuiWindowFlags_NoBringToFrontOnFocus | 
-            ImGuiWindowFlags_NoNavFocus |                                        
-            ImGuiWindowFlags_NoDocking |
-            ImGuiWindowFlags_NoResize |
-            ImGuiWindowFlags_NoMove |
-			ImGuiWindowFlags_NoTitleBar |
-            ImGuiWindowFlags_NoCollapse
-			);
-			  
-		ImGui::DockSpace(ImGui::GetID("Dockspace2"), ImVec2(0.0f, 0.0f),  ImGuiDockNodeFlags_PassthruCentralNode);
-
-		if (ImGui::BeginTabBar("Tab1")) {
-			if(ImGui::BeginTabItem("Objects")) {
-				if(this->gameObjects->size() > 0) {
-			for(int i = 0; i < this->gameObjects->size(); i +=1) {
-				GameObject *gObj = this->gameObjects->at(i);
-
-				// Selector
-				if(selectedIndex == i) {
-					ImGui::Text("*");
-					ImGui::SameLine();
-				}
-
-				// Name
-				std::filesystem::path path(gObj->name);
-				ImGui::Text("%s", path.filename().c_str());
-
-				// Select btn
-				if(selectedIndex != i) {
-					ImGui::SameLine();
-					if(ImGui::Button("Select"))
-						selectedIndex = i;
-				}
-			}
-		} else {
-			ImGui::Text("Empty list");
-		}
-		ImGui::EndTabItem();
-			}
-                if (ImGui::BeginTabItem("Editor")) {
-					if(props.is_tools_mode && selectedIndex != -1) {
-		GameObject *gObj = this->gameObjects->at(selectedIndex);
-
-		float *position = new float[] { gObj->position.x, gObj->position.y, gObj->position.z };
-		float *scale = new float[] { gObj->scale.x, gObj->scale.y, gObj->scale.z };
-
-		//ImGui::Begin(gObj->name.c_str(), nullptr, ImGuiWindowFlags_DockNodeHost);
-		if(ImGui::InputFloat3("Position", position)) {
-			gObj->position.x = position[0];
-			gObj->position.y = position[1];
-			gObj->position.z = position[2];
-		}
-		// TODO: impl rotation ImGui::InputFloat3("Rotation", arr);
-		if(ImGui::InputFloat3("Scale", scale)) {
-			gObj->scale.x = scale[0];
-			gObj->scale.y = scale[1];
-			gObj->scale.z = scale[2];
-		}
-		if(ImGui::Button("Remove")) {
-			this->gameObjects->erase(this->gameObjects->begin() + selectedIndex);
-			selectedIndex = -1;
-		}
-	}
-                    ImGui::EndTabItem();
-                }
-				
-                ImGui::EndTabBar();
-            }
-
-		
-		ImGui::End();
-	}
-
-	// Rendering
-	ImGui::Render();
-    auto raw = ImGui::GetDrawData();
-    ImGui_ImplOpenGL3_RenderDrawData(raw);
+	Backend::BeginFrame();
+	rmlContext->Render();
+	Backend::PresentFrame();
 }
 
 void Engine::shutdown() {
-	// Cleanup
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
+	Rml::Shutdown();
+	Backend::Shutdown();
 
 	renderer->shutdown();
 	renderer = nullptr;

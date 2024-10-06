@@ -1,0 +1,9 @@
+<rml>
+	<head>
+		<title></title>
+        <link type="text/rcss" href="console.rcss"/>
+	</head>
+	<body>
+		In future - here is should be console.
+	</body>
+</rml>

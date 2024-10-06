@@ -20,6 +20,10 @@ SDL_GLContext Renderer::getGLContext() {
     return this->gl_context;
 }
 
+SDL_Window *Renderer::getSDLWindow() {
+    return this->window;
+}
+
 glm::vec2 Renderer::get_render_size() {
 	int w, h;
 	SDL_GL_GetDrawableSize(this->window, &w, &h);

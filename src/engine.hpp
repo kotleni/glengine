@@ -15,19 +15,13 @@
 // clang-format on
 
 // clang-format off
-#include "imgui.h"
-#include "imgui_internal.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_opengl3.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 // clang-format on
 
 // clang-format off
-#include <SDL2/SDL.h>
-#if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <SDL2/SDL_opengles2.h>
-#else
-#include <SDL2/SDL_opengl.h>
-#endif
+#include <RmlUi/Core.h>
+#include <RmlUi_Backend.h>
 // clang-format on
 
 #include "define.hpp"
@@ -49,7 +43,7 @@ private:
 
     SDL_Window *window;
     Renderer *renderer;
-    ImGuiIO io;
+    Rml::Context* rmlContext;
     bool is_runing;
 
     std::vector<GameObject*> *gameObjects;

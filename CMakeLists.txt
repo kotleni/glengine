@@ -4,17 +4,15 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
+include(cmake/detect_platform.cmake)
+
 add_subdirectory(renderer/)
+add_subdirectory(rocketui/)
 
 # Defines
 # TODO: if/add is really needed?
 if(ENABLE_TOOLS)
 	add_compile_definitions(ENABLE_TOOLS)
-endif()
-
-# Detect constants
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    set(MACOSX TRUE)
 endif()
 
 # Prerequisites
@@ -25,9 +23,10 @@ find_package(SDL2 REQUIRED)
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
 find_package(GLEW REQUIRED)
+find_package(RmlUi REQUIRED)
 
 # macOS should get gl and sdl2 from frameworks
-if(MACOSX)
+if(OSX)
     list(APPEND EXTRA_LIBS
             "-framework OpenGL"
             "-framework SDL2"
@@ -36,14 +35,6 @@ endif()
 
 # Source Files
 add_executable(${PROJECT_NAME}
-	thirdparty/imgui/imgui.cpp
-	thirdparty/imgui/imgui_demo.cpp
-	thirdparty/imgui/imgui_draw.cpp
-	thirdparty/imgui/imgui_tables.cpp
-	thirdparty/imgui/imgui_widgets.cpp
-	thirdparty/imgui/backends/imgui_impl_sdl2.cpp
-    thirdparty/imgui/backends/imgui_impl_opengl3.cpp
-
 	src/engine.cpp
 	src/game_object.cpp
 	src/resources_manager.cpp
@@ -57,14 +48,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${GLUT_INCLUDE_DIRS}
 	${ASSIMP_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
-	${CMAKE_SOURCE_DIR}/inc
-	${CMAKE_SOURCE_DIR}/inc/imgui
-	${CMAKE_SOURCE_DIR}/inc/imgui/backends
-
-	thirdparty/imgui/
+	${CMAKE_SOURCE_DIR}/thirdparty
 	
 	common/
 	renderer/
+	rocketui/
 )
 
 # Compiler Options
@@ -97,7 +85,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
 
 
 # Link libraries
-if(NOT MACOSX) # macOS should use GL from frameworks
+if(NOT OSX) # macOS should use GL from frameworks
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
 
@@ -107,6 +95,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${OPENGL_INCLUDE_DIR} # FIXME: what? includes in linking?
 	dl
 	renderer
+	rocketui
 	)
 
 # # Post Build Directories

@@ -39,6 +39,7 @@ public:
      * @return Actual SDL_GLContext
      * ***/
     SDL_GLContext getGLContext();
+    SDL_Window *getSDLWindow();
 
     glm::vec2 get_render_size();
 
