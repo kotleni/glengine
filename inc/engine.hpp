@@ -24,9 +24,9 @@
 // clang-format off
 #include <SDL2/SDL.h>
 #if defined(IMGUI_IMPL_OPENGL_ES2)
-#include <SDL_opengles2.h>
+#include <SDL2/SDL_opengles2.h>
 #else
-#include <SDL_opengl.h>
+#include <SDL2/SDL_opengl.h>
 #endif
 // clang-format on
 
@@ -36,9 +36,10 @@
 #include "camera.hpp"
 #include "model.hpp"
 #include "directional_light.hpp"
-#include "skybox.hpp"
+#include <skybox.hpp>
 #include "resources_manager.hpp"
 #include "game_object.hpp"
+#include <renderer.hpp>
 
 class Engine {
 private:
@@ -47,17 +48,13 @@ private:
     void on_render_gui();
 
     SDL_Window *window;
-    SDL_GLContext gl_context;
+    Renderer *renderer;
     ImGuiIO io;
     bool is_runing;
-    ImVec4 clear_color;
 
     std::vector<GameObject*> *gameObjects;
 public:
     EngineProps props;
-
-    DirectionalLight *directionalLight;
-
     ResourcesManager *resourcesMamanger;
 
     Engine();
@@ -67,8 +64,6 @@ public:
     void render_splash();
     void run();
     void shutdown();
-
-    glm::vec2 get_render_size();
 };
 
 static Engine *instance;

@@ -24,7 +24,7 @@ public:
     glm::vec3 scale;
 
     GameObject(ResourcesManager *resourcesManager, std::string modelName);
-    void draw(Camera *camera, Shader *shader);
+    Model *getModel();
 };
 
 #endif

@@ -4,6 +4,8 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
+add_subdirectory(renderer/)
+
 # Defines
 # TODO: if/add is really needed?
 if(ENABLE_TOOLS)
@@ -42,16 +44,11 @@ add_executable(${PROJECT_NAME}
 	inc/imgui/backends/imgui_impl_sdl2.cpp
     inc/imgui/backends/imgui_impl_opengl3.cpp
 
-	src/shader.cpp
-	src/mesh.cpp
-	src/model.cpp
 	src/engine.cpp
-	src/camera.cpp
-	src/directional_light.cpp
-	src/skybox.cpp
 	src/game_object.cpp
 	src/resources_manager.cpp
-	src/main.cpp)
+	src/main.cpp
+)
 
 # Include Directories
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -62,7 +59,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${GLEW_INCLUDE_DIRS}
 	${CMAKE_SOURCE_DIR}/inc
 	${CMAKE_SOURCE_DIR}/inc/imgui
-	${CMAKE_SOURCE_DIR}/inc/imgui/backends)
+	${CMAKE_SOURCE_DIR}/inc/imgui/backends
+	
+	common/
+	renderer/
+)
 
 # Compiler Options
 target_compile_options(${PROJECT_NAME} PRIVATE
@@ -103,6 +104,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${SDL2_LIBRARIES}
 	${OPENGL_INCLUDE_DIR} # FIXME: what? includes in linking?
 	dl
+	renderer
 	)
 
 # # Post Build Directories
