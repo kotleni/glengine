@@ -6,16 +6,23 @@
     font-family: LatoLatin;
 	font-weight: normal;
 	font-style: normal;
-	font-size: 15dp;
+	font-size: 12dp;
 }
 
 body {
-	width: 240dp;
-	height: 240dp;
-    background-color: black;
-    color: white;
-	margin: 8px;
     padding: 8px;
+    color: #ffffff;
+	background-color: #000000aa;
+	border: 1px #D89D74;
+	width: 52%;
+	height: 38%;
+	position: absolute;
+	left: 1%;
+	top: 1%;
+}
+
+.hud-build-info {
+	
 }
 
 div

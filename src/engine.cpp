@@ -135,10 +135,13 @@ void Engine::init_gui() {
 	for (const FontFace& face : font_faces)
 		Rml::LoadFontFace(directory + face.filename, face.fallback_face);
 
-	// Console
-	Rml::ElementDocument* consoleDocument = rmlContext->LoadDocument("../assets/ui/layouts/console.rml");
-	if (consoleDocument)
-		consoleDocument->Show();
+	// Loading gui elements
+	this->guiElements = new std::vector<BaseGuiElement*>();
+	this->guiElements->push_back(new ConsoleGuiElement());
+
+	for(int i = 0; i < this->guiElements->size(); i += 1) {
+		this->guiElements->at(i)->load(this->rmlContext);
+	}
 }
 
 void Engine::render_splash() {
@@ -150,6 +153,7 @@ void Engine::run() {
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);
 
+	// Loading game objects
 	this->gameObjects = new std::vector<GameObject*>();
 
 	resourcesMamanger = new ResourcesManager();
@@ -184,6 +188,10 @@ void Engine::run() {
 		// 	// TODO: Rquested close
 		// }
 
+		// Update GUI
+		for(int i = 0; i < this->guiElements->size(); i += 1) {
+			this->guiElements->at(i)->update();
+		}
 		rmlContext->Update();
 
 		this->renderer->beginFrame();
@@ -272,6 +280,11 @@ void Engine::on_render_gui() {
 }
 
 void Engine::shutdown() {
+	// Unload all GUI elements
+	for(int i = 0; i < this->guiElements->size(); i += 1) {
+		this->guiElements->at(i)->unload();
+	}
+
 	Rml::Shutdown();
 	Backend::Shutdown();
 

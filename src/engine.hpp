@@ -35,6 +35,9 @@
 #include "game_object.hpp"
 #include <renderer.hpp>
 
+#include "gui/baseguielement.h"
+#include "gui/consoleguielement.h"
+
 class Engine {
 private:
     void on_event(SDL_Event *event); 
@@ -47,6 +50,7 @@ private:
     bool is_runing;
 
     std::vector<GameObject*> *gameObjects;
+    std::vector<BaseGuiElement*> *guiElements;
 public:
     EngineProps props;
     ResourcesManager *resourcesMamanger;

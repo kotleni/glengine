@@ -35,6 +35,8 @@ endif()
 
 # Source Files
 add_executable(${PROJECT_NAME}
+	src/gui/consoleguielement.cpp
+
 	src/engine.cpp
 	src/game_object.cpp
 	src/resources_manager.cpp
