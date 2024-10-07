@@ -35,6 +35,7 @@
 #include "gameobject.hpp"
 #include "basicgameobject.hpp"
 #include <renderer.hpp>
+#include "logger.hpp"
 
 #include "gui/baseguielement.h"
 #include "gui/consoleguielement.h"
@@ -52,6 +53,7 @@ private:
 
     std::vector<GameObject*> *gameObjects;
     std::vector<BaseGuiElement*> *guiElements;
+
 public:
     EngineProps props;
     ResourcesManager *resourcesMamanger;

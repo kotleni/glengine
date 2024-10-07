@@ -41,6 +41,7 @@ add_library(${PROJECT_NAME}
 
 	engine.cpp
 	basicgameobject.cpp
+	logger.cpp
 	resources_manager.cpp
 	entry.cpp
 )

@@ -36,6 +36,8 @@ bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier ke
 }
 
 void Engine::init(int argc, char ** argv) {
+    logger()->logInfo("Initializing engine...");
+
 	const std::vector<std::string> str_args(argv + 1, argv + argc);
 
 	args::ArgumentParser parser("Engine", "Description here");
@@ -89,14 +91,18 @@ void Engine::init(int argc, char ** argv) {
 	glewExperimental = GL_TRUE; 
 	glewInit();
 
+	logger()->logInfo("Glew initialized.");
+
 	glEnable(GL_DEPTH_TEST);
 	#if defined(ENABLE_GL_DEBUGGING) && !defined(OS_MACOS)
+		logger()->logInfo("OpenGL debugging is enabled in build.");
 		// INFO: macOS don't support debug opengl
 		glEnable              ( GL_DEBUG_OUTPUT );
 		glDebugMessageCallback( MessageCallback, 0 );
 	#endif
 
 	this->renderer = new Renderer(window, gl_context);
+	logger()->logInfo("Renderer initialized.");
 }
 
 void Engine::init_gui() {
@@ -105,7 +111,7 @@ void Engine::init_gui() {
 	if (!Backend::Initialize(render_size.x, render_size.y, renderer->getSDLWindow(), renderer->getGLContext()))
 	{
 		// TODO: Crash
-		std::cout << "PANIC: Backend::Initialize return false\n";
+		logger()->logError("Backend::Initialize return false.");
 		return;
 	}
 
@@ -132,6 +138,8 @@ void Engine::init_gui() {
 		{"LatoLatin-BoldItalic.ttf", false},
 	};
 
+	logger()->logInfo("Loading fonts from %s..", directory);
+
 	for (const FontFace& face : font_faces)
 		Rml::LoadFontFace(directory + face.filename, face.fallback_face);
 
@@ -142,6 +150,8 @@ void Engine::init_gui() {
 	for(int i = 0; i < this->guiElements->size(); i += 1) {
 		this->guiElements->at(i)->load(this->rmlContext);
 	}
+
+	logger()->logInfo("Loaded %d gui elements.", this->guiElements->size());
 }
 
 void Engine::render_splash() {
