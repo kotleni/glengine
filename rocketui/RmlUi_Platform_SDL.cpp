@@ -77,48 +77,48 @@ void SystemInterface_SDL::GetClipboardText(Rml::String& text)
 	SDL_free(raw_text);
 }
 
-bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Event& ev)
-{
-	bool result = true;
+// bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Event& ev)
+// {
+// 	bool result = true;
 	
-	switch (ev.type)
-	{
-	case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, GetKeyModifierState()); break;
-	case SDL_MOUSEBUTTONDOWN:
-		result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.button.button), GetKeyModifierState());
-		SDL_CaptureMouse(SDL_TRUE);
-		break;
-	case SDL_MOUSEBUTTONUP:
-		SDL_CaptureMouse(SDL_FALSE);
-		result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.button.button), GetKeyModifierState());
-		break;
-	case SDL_MOUSEWHEEL: result = context->ProcessMouseWheel(float(-ev.wheel.y), GetKeyModifierState()); break;
-	case SDL_KEYDOWN:
-		result = context->ProcessKeyDown(ConvertKey(ev.key.keysym.sym), GetKeyModifierState());
-		if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER)
-			result &= context->ProcessTextInput('\n');
-		break;
-	case SDL_KEYUP: result = context->ProcessKeyUp(ConvertKey(ev.key.keysym.sym), GetKeyModifierState()); break;
-	case SDL_TEXTINPUT: result = context->ProcessTextInput(Rml::String(&ev.text.text[0])); break;
-	case SDL_WINDOWEVENT:
-	{
-		switch (ev.window.event)
-		{
-		case SDL_WINDOWEVENT_SIZE_CHANGED:
-		{
-			Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
-			context->SetDimensions(dimensions);
-		}
-		break;
-		case SDL_WINDOWEVENT_LEAVE: context->ProcessMouseLeave(); break;
-		}
-	}
-	break;
-	default: break;
-	}
+// 	switch (ev.type)
+// 	{
+// 	case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, GetKeyModifierState()); break;
+// 	case SDL_MOUSEBUTTONDOWN:
+// 		result = context->ProcessMouseButtonDown(ConvertMouseButton(ev.button.button), GetKeyModifierState());
+// 		SDL_CaptureMouse(SDL_TRUE);
+// 		break;
+// 	case SDL_MOUSEBUTTONUP:
+// 		SDL_CaptureMouse(SDL_FALSE);
+// 		result = context->ProcessMouseButtonUp(ConvertMouseButton(ev.button.button), GetKeyModifierState());
+// 		break;
+// 	case SDL_MOUSEWHEEL: result = context->ProcessMouseWheel(float(-ev.wheel.y), GetKeyModifierState()); break;
+// 	case SDL_KEYDOWN:
+// 		result = context->ProcessKeyDown(ConvertKey(ev.key.keysym.sym), GetKeyModifierState());
+// 		if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER)
+// 			result &= context->ProcessTextInput('\n');
+// 		break;
+// 	case SDL_KEYUP: result = context->ProcessKeyUp(ConvertKey(ev.key.keysym.sym), GetKeyModifierState()); break;
+// 	case SDL_TEXTINPUT: result = context->ProcessTextInput(Rml::String(&ev.text.text[0])); break;
+// 	case SDL_WINDOWEVENT:
+// 	{
+// 		switch (ev.window.event)
+// 		{
+// 		case SDL_WINDOWEVENT_SIZE_CHANGED:
+// 		{
+// 			Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
+// 			context->SetDimensions(dimensions);
+// 		}
+// 		break;
+// 		case SDL_WINDOWEVENT_LEAVE: context->ProcessMouseLeave(); break;
+// 		}
+// 	}
+// 	break;
+// 	default: break;
+// 	}
 
-	return result;
-}
+// 	return result;
+// }
 
 Rml::Input::KeyIdentifier RmlSDL::ConvertKey(int sdlkey)
 {

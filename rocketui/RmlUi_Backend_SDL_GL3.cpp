@@ -184,19 +184,48 @@ Rml::RenderInterface* Backend::GetRenderInterface()
 	return &data->render_interface;
 }
 
-bool Backend::ProcessEvent(Rml::Context* context, SDL_Event event) {
+bool Backend::ProcessEvent(Rml::Context* context, SDL_Event ev) {
 	RMLUI_ASSERT(data && context);
 
-	switch(event.type) {
-		case SDL_WINDOWEVENT:
-			if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
-				Rml::Vector2i dimensions(event.window.data1, event.window.data2);
-				data->render_interface.SetViewport(dimensions.x, dimensions.y);
-			}
-			break;
+	bool result = true;
+	
+	switch (ev.type)
+	{
+	case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, RmlSDL::GetKeyModifierState()); break;
+	case SDL_MOUSEBUTTONDOWN:
+		result = context->ProcessMouseButtonDown(RmlSDL::ConvertMouseButton(ev.button.button), RmlSDL::GetKeyModifierState());
+		SDL_CaptureMouse(SDL_TRUE);
+		break;
+	case SDL_MOUSEBUTTONUP:
+		SDL_CaptureMouse(SDL_FALSE);
+		result = context->ProcessMouseButtonUp(RmlSDL::ConvertMouseButton(ev.button.button), RmlSDL::GetKeyModifierState());
+		break;
+	case SDL_MOUSEWHEEL: result = context->ProcessMouseWheel(float(-ev.wheel.y), RmlSDL::GetKeyModifierState()); break;
+	case SDL_KEYDOWN:
+		result = context->ProcessKeyDown(RmlSDL::ConvertKey(ev.key.keysym.sym), RmlSDL::GetKeyModifierState());
+		if (ev.key.keysym.sym == SDLK_RETURN || ev.key.keysym.sym == SDLK_KP_ENTER)
+			result &= context->ProcessTextInput('\n');
+		break;
+	case SDL_KEYUP: result = context->ProcessKeyUp(RmlSDL::ConvertKey(ev.key.keysym.sym), RmlSDL::GetKeyModifierState()); break;
+	case SDL_TEXTINPUT: result = context->ProcessTextInput(Rml::String(&ev.text.text[0])); break;
+	case SDL_WINDOWEVENT:
+	{
+		switch (ev.window.event)
+		{
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+		{
+			Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
+			context->SetDimensions(dimensions);
+		}
+		break;
+		case SDL_WINDOWEVENT_LEAVE: context->ProcessMouseLeave(); break;
+		}
+	}
+	break;
+	default: break;
 	}
 
-	RmlSDL::InputEventHandler(context, event);
+	return result;
 }
 
 void Backend::RequestExit()
