@@ -90,7 +90,7 @@ void Engine::init(int argc, char ** argv) {
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
-	#ifndef OS_MACOS
+	#if defined(ENABLE_GL_DEBUGGING) && !defined(OS_MACOS)
 		// INFO: macOS don't support debug opengl
 		glEnable              ( GL_DEBUG_OUTPUT );
 		glDebugMessageCallback( MessageCallback, 0 );

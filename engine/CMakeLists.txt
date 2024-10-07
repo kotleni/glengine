@@ -4,10 +4,15 @@ project(engine)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
+set(ENABLE_GL_DEBUGGING OFF)
+
 # Defines
 # TODO: if/add is really needed?
 if(ENABLE_TOOLS)
 	add_compile_definitions(ENABLE_TOOLS)
+endif()
+if(ENABLE_GL_DEBUGGING)
+	add_compile_definitions(ENABLE_GL_DEBUGGING)
 endif()
 
 # Prerequisites
