@@ -10,9 +10,8 @@
 }
 
 body {
-    padding: 8px;
     color: #ffffff;
-	background-color: #000000aa;
+	background-color: #232323;
 	border: 1px #D89D74;
 	width: 52%;
 	height: 38%;
@@ -21,10 +20,27 @@ body {
 	top: 1%;
 }
 
-.textfield {
-	padding: 4px;
-	background-color: #251c1c93;
+.titlebar {
+	background-color: #343434;
 	color: white;
+	font-weight: bold;
+	font-size: 13dp;
+	padding: 4px;
+}
+
+.textfield {
+	border-top: 1px #343434;
+	padding: 4px;
+	background-color: black;
+	color: white;
+	width: 98.5%;
+	position: absolute;
+	bottom: 0%;
+	cursor: text;
+}
+
+.logstext {
+	padding: 4px;
 }
 
 div

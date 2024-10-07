@@ -292,6 +292,11 @@ bool Engine::on_event(SDL_Event event) {
 		}
 	}
 
+	for(int i = 0; i < this->guiElements->size(); i += 1) {
+		if(this->guiElements->at(i)->processEvent(event))
+			return true;
+	}
+
 	return false;
 }
 
