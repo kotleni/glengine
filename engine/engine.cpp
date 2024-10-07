@@ -189,7 +189,7 @@ void Engine::run() {
 		"../assets/models/Castle/castle.obj",
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 0, 0),
-		glm::vec3(0, 0, 0)
+		glm::vec3(1, 1, 1)
 	);
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
