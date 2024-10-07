@@ -39,6 +39,12 @@ body {
 	cursor: text;
 }
 
+.resizehandle {
+	position: absolute;
+	bottom: 0%;
+	right: 0%;
+}
+
 .logstext {
 	padding: 4px;
 }

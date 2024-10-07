@@ -4,9 +4,12 @@
         <link type="text/rcss" href="console.rcss"/>
 	</head>
 	<body>
-		<div class="titlebar">CONSOLE</div>
+		<handle move_target="#document">
+			<div class="titlebar">CONSOLE</div>
+		</handle>
 		<p class="logstext" id="text">TEXT</p>
 		<hr>
 		<input class="textfield" type="text" size="128" value="defauslt" name="chat_input"/>
+		<handle class="resizehandle" size_target="#document">[]</handle>
 	</body>
 </rml>
