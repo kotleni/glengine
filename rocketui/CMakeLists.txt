@@ -37,7 +37,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ./
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 SDL2_image::SDL2_image GLEW::GLEW RmlUi::RmlUi)
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+    SDL2::SDL2 
+    SDL2_image::SDL2_image 
+    GLEW::GLEW 
+    RmlUi::RmlUi
+)
 
 # Link libraries
 if(NOT OSX) # macOS should use GL from frameworks

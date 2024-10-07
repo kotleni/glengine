@@ -40,17 +40,13 @@ target_include_directories(${PROJECT_NAME} PRIVATE
     ./
 )
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
-target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
-
+target_link_libraries(${PROJECT_NAME} PRIVATE 
+	${ASSIMP_LIBRARIES}
+	${SDL2_LIBRARIES}
+	GLEW::GLEW
+)
 
 # Link libraries
 if(NOT OSX) # macOS should use GL from frameworks
 	target_link_libraries(${PROJECT_NAME} PRIVATE GL)
 endif()
-
-# Standard Link Libraries
-target_link_libraries(${PROJECT_NAME} PRIVATE
-	${SDL2_LIBRARIES}
-	dl
-)
