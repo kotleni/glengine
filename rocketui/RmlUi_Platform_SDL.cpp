@@ -80,7 +80,7 @@ void SystemInterface_SDL::GetClipboardText(Rml::String& text)
 bool RmlSDL::InputEventHandler(Rml::Context* context, SDL_Event& ev)
 {
 	bool result = true;
-
+	
 	switch (ev.type)
 	{
 	case SDL_MOUSEMOTION: result = context->ProcessMouseMove(ev.motion.x, ev.motion.y, GetKeyModifierState()); break;

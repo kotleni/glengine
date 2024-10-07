@@ -179,14 +179,12 @@ void Engine::run() {
 				event.window.event == SDL_WINDOWEVENT_CLOSE &&
 				event.window.windowID == SDL_GetWindowID(window))
 				is_runing = false;
-            else
-                on_event(&event);
+            else {
+				if(!on_event(event)) {
+					Backend::ProcessEvent(rmlContext, event);
+				}
+			}
 		}
-
-		// TODO: Blocking usage, what a /??
-		// if(!Backend::ProcessEvents(rmlContext, nullptr, true)) {
-		// 	// TODO: Rquested close
-		// }
 
 		// Update GUI
 		for(int i = 0; i < this->guiElements->size(); i += 1) {
@@ -205,48 +203,60 @@ void Engine::run() {
     shutdown();
 }
 
-void Engine::on_event(SDL_Event *event) {
+bool Engine::on_event(SDL_Event event) {
 	// Camera look
-	if(event->type == SDL_MOUSEMOTION) {
+	if(event.type == SDL_MOUSEMOTION) {
 		int xrel;
 		int yrel;
 		SDL_GetRelativeMouseState(&xrel, &yrel);
 		
 		camera->look_relative((float) xrel, (float) yrel);
+		return true;
 	}
 
 	// printf("yaw: %f, pitch: %f", yaw, pitch);
 
-	if(event->type == SDL_KEYUP) {
-		if(event->key.keysym.sym == SDLK_w) {
+	if(event.type == SDL_KEYUP) {
+		if(event.key.keysym.sym == SDLK_w) {
 			moveFront = 0;
-		} else if(event->key.keysym.sym == SDLK_s) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_s) {
 			moveFront = 0;
-		} else if(event->key.keysym.sym == SDLK_a) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_a) {
 			moveRight = 0;
-		} else if(event->key.keysym.sym == SDLK_d) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_d) {
 			moveRight = 0;
+			return true;
 		} 
 	}
 
-    if(event->type == SDL_KEYDOWN) {
-		if(event->key.keysym.sym == SDLK_w) {
+    if(event.type == SDL_KEYDOWN) {
+		if(event.key.keysym.sym == SDLK_w) {
 			moveFront = 1;
-		} else if(event->key.keysym.sym == SDLK_s) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_s) {
 			moveFront = -1;
-		} else if(event->key.keysym.sym == SDLK_a) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_a) {
 			moveRight = -1;
-		} else if(event->key.keysym.sym == SDLK_d) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_d) {
 			moveRight = 1;
-		} else if(event->key.keysym.sym == SDLK_p) {
+			return true;
+		} else if(event.key.keysym.sym == SDLK_p) {
 			if(SDL_GetRelativeMouseMode())
 				SDL_SetRelativeMouseMode(SDL_FALSE);
 			else
 				SDL_SetRelativeMouseMode(SDL_TRUE);
+
+			return true;
 		}
 	}
-}
 
+	return false;
+}
 
 void Engine::on_render() {
 	// Update camera is mouse pinned

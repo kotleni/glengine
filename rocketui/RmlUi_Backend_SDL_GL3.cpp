@@ -184,83 +184,19 @@ Rml::RenderInterface* Backend::GetRenderInterface()
 	return &data->render_interface;
 }
 
-bool Backend::ProcessEvents(Rml::Context* context, KeyDownCallback key_down_callback, bool power_save)
-{
+bool Backend::ProcessEvent(Rml::Context* context, SDL_Event event) {
 	RMLUI_ASSERT(data && context);
 
-#if defined RMLUI_PLATFORM_EMSCRIPTEN
-
-	// Ideally we would hand over control of the main loop to emscripten:
-	//
-	//  // Hand over control of the main loop to the WebAssembly runtime.
-	//  emscripten_set_main_loop_arg(EventLoopIteration, (void*)user_data_handle, 0, true);
-	//
-	// The above is the recommended approach. However, as we don't control the main loop here we have to make due with another approach. Instead, use
-	// Asyncify to yield by sleeping.
-	// Important: Must be linked with option -sASYNCIFY
-	emscripten_sleep(1);
-
-#endif
-
-	bool result = data->running;
-	data->running = true;
-
-	SDL_Event ev;
-	int has_event = 0;
-	if (power_save)
-		has_event = SDL_WaitEventTimeout(&ev, static_cast<int>(Rml::Math::Min(context->GetNextUpdateDelay(), 10.0) * 1000));
-	else
-		has_event = SDL_PollEvent(&ev);
-	while (has_event)
-	{
-		switch (ev.type)
-		{
-		case SDL_QUIT:
-		{
-			result = false;
-		}
-		break;
-		case SDL_KEYDOWN:
-		{
-			const Rml::Input::KeyIdentifier key = RmlSDL::ConvertKey(ev.key.keysym.sym);
-			const int key_modifier = RmlSDL::GetKeyModifierState();
-			const float native_dp_ratio = 1.f;
-
-			// See if we have any global shortcuts that take priority over the context.
-			if (key_down_callback && !key_down_callback(context, key, key_modifier, native_dp_ratio, true))
-				break;
-			// Otherwise, hand the event over to the context by calling the input handler as normal.
-			if (!RmlSDL::InputEventHandler(context, ev))
-				break;
-			// The key was not consumed by the context either, try keyboard shortcuts of lower priority.
-			if (key_down_callback && !key_down_callback(context, key, key_modifier, native_dp_ratio, false))
-				break;
-		}
-		break;
+	switch(event.type) {
 		case SDL_WINDOWEVENT:
-		{
-			switch (ev.window.event)
-			{
-			case SDL_WINDOWEVENT_SIZE_CHANGED:
-			{
-				Rml::Vector2i dimensions(ev.window.data1, ev.window.data2);
+			if(event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED) {
+				Rml::Vector2i dimensions(event.window.data1, event.window.data2);
 				data->render_interface.SetViewport(dimensions.x, dimensions.y);
 			}
 			break;
-			}
-			RmlSDL::InputEventHandler(context, ev);
-		}
-		break;
-		default:
-		{
-			RmlSDL::InputEventHandler(context, ev);
-		}
-		break;
-		}
-		has_event = SDL_PollEvent(&ev);
 	}
 
-	return result;
+	RmlSDL::InputEventHandler(context, event);
 }
 
 void Backend::RequestExit()

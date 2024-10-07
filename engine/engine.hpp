@@ -40,7 +40,7 @@
 
 class Engine {
 private:
-    void on_event(SDL_Event *event); 
+    bool on_event(SDL_Event event); 
     void on_render();
     void on_render_gui();
 
