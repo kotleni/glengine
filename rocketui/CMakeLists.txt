@@ -3,6 +3,9 @@ project(rocketui)
 
 include(../cmake/detect_platform.cmake)
 
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
+
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(RmlUi REQUIRED)
@@ -18,6 +21,7 @@ if(MACOSX)
 endif()
 
 add_library(${PROJECT_NAME}
+    SHARED 
     RmlUi_Backend_SDL_GL3.cpp
     RmlUi_Platform_SDL.cpp
     RmlUi_Renderer_GL3.cpp

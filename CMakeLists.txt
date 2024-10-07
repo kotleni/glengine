@@ -81,9 +81,12 @@ target_compile_options(${PROJECT_NAME} PRIVATE
 	-pg
 	-g)
 
+set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "-Wl,-rpath,./bin/")
+
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
+target_link_libraries(${PROJECT_NAME} PRIVATE RmlUi::RmlUi)
 
 
 # Link libraries
