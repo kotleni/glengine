@@ -4,6 +4,7 @@
         <link type="text/rcss" href="console.rcss"/>
 	</head>
 	<body>
+		<input class="textfield" type="text" size="128" value="defauslt" name="chat_input"/>
 		<p class="hud-build-info" id="text">TEXT</p>
 	</body>
 </rml>

@@ -21,8 +21,10 @@ body {
 	top: 1%;
 }
 
-.hud-build-info {
-	
+.textfield {
+	padding: 4px;
+	background-color: #251c1c93;
+	color: white;
 }
 
 div
