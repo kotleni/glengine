@@ -148,6 +148,26 @@ void Engine::render_splash() {
 	// TODO: Impl rendering loading splash
 }
 
+GameObject *Engine::createGameObject(
+    std::string name,
+    std::string modelName,
+    glm::vec3 position,
+    glm::vec3 rotation,
+    glm::vec3 scale
+) {
+	Shader *shader = resourcesMamanger->getShader("textured");
+	Model *model = resourcesMamanger->getModel(modelName);
+	GameObject *gObject = new BasicGameObject(
+		name,
+		position,
+		rotation,
+		scale,
+		model,
+		shader
+	);
+	gameObjects->push_back(gObject);
+}
+
 void Engine::run() {
 	render_splash();
 
@@ -161,9 +181,15 @@ void Engine::run() {
 
 	Shader *defaultShader = resourcesMamanger->getShader("textured");
 	renderer->setDefaultShader(defaultShader);
-
-	GameObject *castleObj = new GameObject(resourcesMamanger, "../assets/models/Castle/castle.obj");
-	gameObjects->push_back(castleObj);
+	
+	// TODO: Load from level file
+	this->createGameObject(
+		"castle",
+		"../assets/models/Castle/castle.obj",
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 0, 0),
+		glm::vec3(0, 0, 0)
+	);
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
@@ -286,7 +312,7 @@ void Engine::on_render() {
 	for(int i = 0; i < this->gameObjects->size(); i +=1) {
 		GameObject *gObj = this->gameObjects->at(i);
 		Model *model = gObj->getModel();
-		Renderable renderable = { model, gObj->position, gObj->scale };
+		Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale()};
 		renderables.push_back(renderable);
 	}
 

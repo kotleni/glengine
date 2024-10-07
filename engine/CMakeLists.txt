@@ -35,7 +35,7 @@ add_library(${PROJECT_NAME}
 	gui/consoleguielement.cpp
 
 	engine.cpp
-	game_object.cpp
+	basicgameobject.cpp
 	resources_manager.cpp
 	entry.cpp
 )

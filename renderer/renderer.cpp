@@ -50,24 +50,23 @@ void Renderer::beginFrame() {
 void Renderer::renderFrame(Camera *camera, std::vector<Renderable> renderables, bool isRenderLight) {
     skybox->draw(camera);
 
-    defaultShader->use();
-
-	// Features bind
-	defaultShader->setBool("features.is_use_light", isRenderLight);
-
-	// Camera bind
-	camera->applyToShader(defaultShader);
-
-    // Apply light to shader
-    for(int i = 0; i < lights.size(); i += 1) {
-        DirectionalLight light = lights.at(i);
-        light.apply(defaultShader);
-    }
-
     // Render all renderables
     for(int i = 0; i < renderables.size(); i += 1) {
         Renderable renderable = renderables.at(i);
         // glBindVertexArray(VAO);
+
+        Shader *shader = renderable.shader;
+
+        // Use shader
+        shader->use();
+        camera->applyToShader(shader);
+        shader->setBool("features.is_use_light", isRenderLight);
+
+        // Apply light to shader
+        for(int i = 0; i < lights.size(); i += 1) {
+            DirectionalLight light = lights.at(i);
+            light.apply(shader);
+        }
    
 	    glm::mat4 model = glm::mat4(1.0f);
 	    model = glm::translate(model, renderable.position);
@@ -76,15 +75,15 @@ void Renderer::renderFrame(Camera *camera, std::vector<Renderable> renderables, 
 
         // TODO: move binding to material
 	    // Bind model matrix
-	    defaultShader->setMat4("model", model);
+	    shader->setMat4("model", model);
 
         // Material bind
-	    defaultShader->setVec3("material.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
-	    defaultShader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.3f));
-	    defaultShader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
-	    defaultShader->setFloat("material.shininess", 76.8f);
+	    shader->setVec3("material.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
+	    shader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.3f));
+	    shader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
+	    shader->setFloat("material.shininess", 76.8f);
 
-        renderable.model->Draw(*defaultShader);
+        renderable.model->Draw(*shader);
     }
 }
 

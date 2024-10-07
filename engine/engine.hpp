@@ -32,7 +32,8 @@
 #include "directional_light.hpp"
 #include <skybox.hpp>
 #include "resources_manager.hpp"
-#include "game_object.hpp"
+#include "gameobject.hpp"
+#include "basicgameobject.hpp"
 #include <renderer.hpp>
 
 #include "gui/baseguielement.h"
@@ -62,6 +63,14 @@ public:
     void render_splash();
     void run();
     void shutdown();
+
+    GameObject *createGameObject(
+        std::string name,
+        std::string modelName,
+        glm::vec3 position,
+        glm::vec3 rotation,
+        glm::vec3 scale
+    );
 };
 
 static Engine *instance;
