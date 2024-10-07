@@ -80,12 +80,13 @@ void Engine::init(int argc, char ** argv) {
 	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
 
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(
-		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI
+		SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE //| SDL_WINDOW_ALLOW_HIGHDPI
 	);
 	glm::vec2 window_size = glm::vec2(1200, 800);
 	window = SDL_CreateWindow(ENGINE_NAME,
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, window_size.x, window_size.y,
 		window_flags);
+
 	SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
 	SDL_GL_MakeCurrent(window, gl_context);
@@ -126,6 +127,9 @@ void Engine::init_gui() {
 	Rml::Initialise();
 
 	rmlContext = Rml::CreateContext("default", Rml::Vector2i(render_size.x, render_size.y));
+
+	// TODO: HiDPI support for UI
+	// rmlContext->SetDensityIndependentPixelRatio(2.0f);
 
 	// Load all fonts
 	const Rml::String directory = "../assets/ui/fonts/";
