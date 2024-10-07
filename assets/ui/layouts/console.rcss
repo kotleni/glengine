@@ -20,6 +20,14 @@ body {
 	top: 1%;
 }
 
+.textcontainer {
+	width: 100%;
+	height: 84%;
+	box-sizing: border-box;
+	overflow-y: auto;
+	padding: 4px;
+}
+
 .titlebar {
 	background-color: #343434;
 	color: white;
@@ -45,8 +53,39 @@ body {
 	right: 0%;
 }
 
-.logstext {
-	padding: 4px;
+
+scrollbarvertical
+{
+	margin-top: -6dp;
+	margin-bottom: -6dp;
+	margin-right: -11dp;
+	width: 27dp;
+}
+
+scrollbarvertical slidertrack
+{
+	decorator: tiled-vertical( slidertrack-t, slidertrack-c, slidertrack-b );
+}
+scrollbarvertical slidertrack:active
+{
+	image-color: #aaa;
+}
+
+scrollbarvertical sliderbar
+{
+	margin-left: 4dp;
+	width: 23dp;
+	min-height: 46dp;
+
+	decorator: tiled-vertical( sliderbar-t, sliderbar-c, sliderbar-b );
+}
+scrollbarvertical sliderbar:hover
+{
+	decorator: tiled-vertical( sliderbar-hover-t, sliderbar-hover-c, sliderbar-hover-b );
+}
+scrollbarvertical sliderbar:active
+{
+	decorator: tiled-vertical( sliderbar-active-t, sliderbar-active-c, sliderbar-active-b );
 }
 
 div
