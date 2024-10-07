@@ -41,7 +41,6 @@ add_library(${PROJECT_NAME}
 
 	engine.cpp
 	basicgameobject.cpp
-	logger.cpp
 	resources_manager.cpp
 	entry.cpp
 )
@@ -56,6 +55,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${CMAKE_SOURCE_DIR}/thirdparty
 	
 	${CMAKE_SOURCE_DIR}/common
+	${CMAKE_SOURCE_DIR}/logger
 	${CMAKE_SOURCE_DIR}/renderer
 	${CMAKE_SOURCE_DIR}/rocketui
 )
@@ -104,5 +104,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	dl
 	renderer
 	rocketui
+	logger
 	)
 

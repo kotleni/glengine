@@ -36,6 +36,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${ASSIMP_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
     
+	${CMAKE_SOURCE_DIR}/logger
 	../common
     ./
 )
@@ -44,6 +45,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 	${ASSIMP_LIBRARIES}
 	${SDL2_LIBRARIES}
 	GLEW::GLEW
+	logger
 )
 
 # Link libraries

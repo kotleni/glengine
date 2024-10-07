@@ -102,7 +102,7 @@ void Engine::init(int argc, char ** argv) {
 		glDebugMessageCallback( MessageCallback, 0 );
 	#endif
 
-	this->renderer = new Renderer(window, gl_context);
+	this->renderer = new Renderer(window, gl_context, logger());
 	logger()->logInfo("Renderer initialized.");
 }
 

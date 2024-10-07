@@ -31,5 +31,8 @@ static Logger *logger() {
         _loggerInstance = new Logger();
     return _loggerInstance;
 }
+static void setLoggerInstance(Logger *logger) {
+    _loggerInstance = logger;
+}
 
 #endif

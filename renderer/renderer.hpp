@@ -16,6 +16,7 @@
 #include <skybox.hpp>
 
 #include <renderable.hpp>
+#include <logger.hpp>
 
 class Renderer {
 private:
@@ -29,7 +30,7 @@ private:
     Skybox *skybox;
     std::vector<DirectionalLight> lights;
 public:
-    Renderer(SDL_Window *window, SDL_GLContext gl_context);
+    Renderer(SDL_Window *window, SDL_GLContext gl_context, Logger *logger);
     void shutdown();
 
     /***

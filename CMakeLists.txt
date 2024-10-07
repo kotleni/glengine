@@ -8,6 +8,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 include(cmake/detect_platform.cmake)
 
+add_subdirectory(logger/)
 add_subdirectory(renderer/)
 add_subdirectory(rocketui/)
 add_subdirectory(engine/)
