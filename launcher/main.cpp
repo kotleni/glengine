@@ -24,7 +24,7 @@ int main(int argc, char ** argv) {
 		void *engine = dlopen(engineLibPath, RTLD_NOW);
 
 		if (!engine) {
-			printf( "Failed to load the engine(%s) (%s)\n", engineLibPath, dlerror() );
+			printf( "Failed to load the engine({}) ({})\n", engineLibPath, dlerror() );
 			while(1);
 			return 0;
 		}

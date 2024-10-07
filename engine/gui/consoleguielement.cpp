@@ -10,10 +10,18 @@ void ConsoleGuiElement::load(Rml::Context* rmlContext) {
 
 void ConsoleGuiElement::update() {
     if(!this->elementDocument) return;
+
+    // Building last logs
+    std::vector<std::string> logsLines = globalLogger.getLogs();
+    std::string outputLines;
+    for(int i = 0; i < logsLines.size(); i++) {
+        std::string line = logsLines.at(i);
+        outputLines.append(line);
+        outputLines.append("<br/>");
+    }
     
     Rml::Element *textElement = elementDocument->GetElementById("text");
-	textElement->SetInnerRML("<b>[Console]</b> Initialized as view element.");
-    // TODO: Cleanup here is needed? delete textElement;
+	textElement->SetInnerRML(outputLines);
 }
 
 bool ConsoleGuiElement::processEvent(SDL_Event event) {

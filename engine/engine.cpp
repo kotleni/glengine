@@ -27,8 +27,8 @@ MessageCallback( GLenum source,
                  const GLchar* message,
                  const void* userParam )
 {
-  //fprintf( stderr, "GL: %s\n", message );
-  logger()->logError("GL: %s\n", message);
+  //fprintf( stderr, "GL: {}\n", message );
+  globalLogger.logError("GL: {}\n", message);
 }
 
 bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority) {
@@ -37,7 +37,7 @@ bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier ke
 }
 
 void Engine::init(int argc, char ** argv) {
-    logger()->logInfo("Initializing engine...");
+    globalLogger.logInfo("Initializing engine...");
 
 	const std::vector<std::string> str_args(argv + 1, argv + argc);
 
@@ -58,7 +58,7 @@ void Engine::init(int argc, char ** argv) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
-		logger()->logError("SDL Error: %s\n", SDL_GetError());
+		globalLogger.logError("SDL Error: {}\n", SDL_GetError());
 		return;
 	}
 	// GL 3.0 + GLSL 130
@@ -92,18 +92,18 @@ void Engine::init(int argc, char ** argv) {
 	glewExperimental = GL_TRUE; 
 	glewInit();
 
-	logger()->logInfo("Glew initialized.");
+	globalLogger.logInfo("Glew initialized.");
 
 	glEnable(GL_DEPTH_TEST);
 	#if defined(ENABLE_GL_DEBUGGING) && !defined(OS_MACOS)
-		logger()->logInfo("OpenGL debugging is enabled in build.");
+		globalLogger.logInfo("OpenGL debugging is enabled in build.");
 		// INFO: macOS don't support debug opengl
 		glEnable              ( GL_DEBUG_OUTPUT );
 		glDebugMessageCallback( MessageCallback, 0 );
 	#endif
 
-	this->renderer = new Renderer(window, gl_context, logger());
-	logger()->logInfo("Renderer initialized.");
+	this->renderer = new Renderer(window, gl_context);
+	globalLogger.logInfo("Renderer initialized.");
 }
 
 void Engine::init_gui() {
@@ -112,7 +112,7 @@ void Engine::init_gui() {
 	if (!Backend::Initialize(render_size.x, render_size.y, renderer->getSDLWindow(), renderer->getGLContext()))
 	{
 		// TODO: Crash
-		logger()->logError("Backend::Initialize return false.");
+		globalLogger.logError("Backend::Initialize return false.");
 		return;
 	}
 
@@ -139,7 +139,7 @@ void Engine::init_gui() {
 		{"LatoLatin-BoldItalic.ttf", false},
 	};
 
-	logger()->logInfo("Loading fonts from %s..", directory);
+	globalLogger.logInfo("Loading fonts from {}..", directory);
 
 	for (const FontFace& face : font_faces)
 		Rml::LoadFontFace(directory + face.filename, face.fallback_face);
@@ -152,7 +152,7 @@ void Engine::init_gui() {
 		this->guiElements->at(i)->load(this->rmlContext);
 	}
 
-	logger()->logInfo("Loaded %d gui elements.", this->guiElements->size());
+	globalLogger.logInfo("Loaded {} gui elements.", this->guiElements->size());
 }
 
 void Engine::render_splash() {

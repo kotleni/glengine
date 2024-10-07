@@ -19,7 +19,7 @@ void ResourcesManager::loadShaders() {
         if(path.ends_with(".vert")) { // Prevent dublicates
             std::filesystem::path filePath(path);
             std::string fileName = filePath.stem().string();
-            logger()->logInfo("(ResourcesManager) Loading shader %s\n", fileName.c_str());
+            globalLogger.logInfo("(ResourcesManager) Loading shader {}", fileName);
             this->shaders[fileName] = Shader::load(fileName);
         }
     });
@@ -29,7 +29,7 @@ void ResourcesManager::loadModels() {
     listFiles(std::string(MODELS_FOLDER), [this](const std::string path) {
         if(path.ends_with(".obj")) { // Allowed only obj models
             std::string fullPath = path;
-            logger()->logInfo("(ResourcesManager) Loading model %s\n", fullPath.c_str());
+            globalLogger.logInfo("(ResourcesManager) Loading model {}", fullPath);
             this->models[fullPath] = new Model(fullPath);
         }
     });

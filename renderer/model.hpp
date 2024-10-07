@@ -9,6 +9,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#include <logger.hpp>
+
 #include "mesh.hpp"
 
 class Model {

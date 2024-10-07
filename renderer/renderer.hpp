@@ -30,7 +30,7 @@ private:
     Skybox *skybox;
     std::vector<DirectionalLight> lights;
 public:
-    Renderer(SDL_Window *window, SDL_GLContext gl_context, Logger *logger);
+    Renderer(SDL_Window *window, SDL_GLContext gl_context);
     void shutdown();
 
     /***

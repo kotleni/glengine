@@ -26,7 +26,7 @@ Shader *Shader::load(std::string file) {
 		VertexShaderCode = sstr.str();
 		VertexShaderStream.close();
 	}else{
-		printf("Can't to open %s.\n", vert_path.c_str());
+		printf("Can't to open {}.\n", vert_path.c_str());
 		getchar();
 		return 0;
 	}
@@ -45,7 +45,7 @@ Shader *Shader::load(std::string file) {
 	int InfoLogLength;
 
 	// Compile Vertex Shader
-	printf("Compiling shader : %s\n", vert_path.c_str());
+	globalLogger.logInfo("Compiling shader : {}", vert_path.c_str());
 	char const * VertexSourcePointer = VertexShaderCode.c_str();
 	glShaderSource(VertexShaderID, 1, &VertexSourcePointer , NULL);
 	glCompileShader(VertexShaderID);
@@ -56,11 +56,11 @@ Shader *Shader::load(std::string file) {
 	if ( InfoLogLength > 0 ){
 		std::vector<char> VertexShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(VertexShaderID, InfoLogLength, NULL, &VertexShaderErrorMessage[0]);
-		printf("%s\n", &VertexShaderErrorMessage[0]);
+		printf("{}\n", &VertexShaderErrorMessage[0]);
 	}
 
 	// Compile Fragment Shader
-	printf("Compiling shader : %s\n", frag_path.c_str());
+	globalLogger.logInfo("Compiling shader : {}", frag_path.c_str());
 	char const * FragmentSourcePointer = FragmentShaderCode.c_str();
 	glShaderSource(FragmentShaderID, 1, &FragmentSourcePointer , NULL);
 	glCompileShader(FragmentShaderID);
@@ -71,11 +71,11 @@ Shader *Shader::load(std::string file) {
 	if ( InfoLogLength > 0 ){
 		std::vector<char> FragmentShaderErrorMessage(InfoLogLength+1);
 		glGetShaderInfoLog(FragmentShaderID, InfoLogLength, NULL, &FragmentShaderErrorMessage[0]);
-		printf("%s\n", &FragmentShaderErrorMessage[0]);
+		printf("{}\n", &FragmentShaderErrorMessage[0]);
 	}
 
 	// Link the program
-	printf("Linking program\n");
+	globalLogger.logInfo("Linking program");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
@@ -87,7 +87,7 @@ Shader *Shader::load(std::string file) {
 	if ( InfoLogLength > 0 ){
 		std::vector<char> ProgramErrorMessage(InfoLogLength+1);
 		glGetProgramInfoLog(ProgramID, InfoLogLength, NULL, &ProgramErrorMessage[0]);
-		printf("%s\n", &ProgramErrorMessage[0]);
+		globalLogger.logInfo("{}\n", &ProgramErrorMessage[0]);
 	}
 	
 	glDetachShader(ProgramID, VertexShaderID);

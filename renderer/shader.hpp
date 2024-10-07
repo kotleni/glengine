@@ -12,6 +12,8 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
+#include <logger.hpp>
+
 class Shader {
 public:
     GLuint program;

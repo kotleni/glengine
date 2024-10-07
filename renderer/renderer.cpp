@@ -1,8 +1,6 @@
 #include "renderer.hpp"
 
-Renderer::Renderer(SDL_Window *window, SDL_GLContext gl_context, Logger *logger) {
-    setLoggerInstance(logger);
-
+Renderer::Renderer(SDL_Window *window, SDL_GLContext gl_context) {
     this->gl_context = gl_context;
     this->window = window;
     this->clearColor = glm::vec4(0.45f, 0.55f, 0.60f, 1.00f);
@@ -106,5 +104,5 @@ void Renderer::createLight(glm::vec3 position) {
     DirectionalLight directional = DirectionalLight(position);
     this->lights.push_back(directional);
 
-    logger()->logInfo("New light source is created at (%d, %d, %d).", position.x, position.y, position.z);
+    globalLogger.logInfo("New light source is created at (%d, %d, %d).", position.x, position.y, position.z);
 }
