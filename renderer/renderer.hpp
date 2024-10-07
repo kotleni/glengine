@@ -4,8 +4,15 @@
 #include <vector>
 
 #include <SDL2/SDL.h>
+
 #include <GL/glew.h>
+
+#if defined(LINUX) | defined(WINDOWS)
 #include <GL/gl.h>
+#elif defined(OSX)
+#include <OpenGL/gl3.h>
+#include <OpenGL/glu.h>
+#endif
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>

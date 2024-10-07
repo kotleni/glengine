@@ -18,6 +18,7 @@ Engine::Engine() {
 	instance = this;
 }
 
+#if !defined(OSX)
 void GLAPIENTRY
 MessageCallback( GLenum source,
                  GLenum type,
@@ -30,6 +31,7 @@ MessageCallback( GLenum source,
   //fprintf( stderr, "GL: {}\n", message );
   LOG_ERROR("GL: {}\n", message);
 }
+#endif
 
 bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority) {
 	// TODO: Check is context is not null from if (!engine().)

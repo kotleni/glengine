@@ -6,8 +6,15 @@
 #include <vector>
 #include <filesystem>
 
-// clang-format off
 #include <GL/glew.h>
+
+// clang-format off
+#if defined(LINUX) | defined(WINDOWS)
+#include <GL/gl.h>
+#elif defined(OSX)
+#include <OpenGL/gl3.h>
+#include <OpenGL/glu.h>
+#endif
 #define GLM_ENABLE_EXPERIMENTAL
 #include "glm/glm.hpp"
 #include "glm/gtx/transform.hpp"
