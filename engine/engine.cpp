@@ -211,7 +211,6 @@ bool Engine::on_event(SDL_Event event) {
 		SDL_GetRelativeMouseState(&xrel, &yrel);
 		
 		camera->look_relative((float) xrel, (float) yrel);
-		return true;
 	}
 
 	// printf("yaw: %f, pitch: %f", yaw, pitch);
@@ -233,7 +232,18 @@ bool Engine::on_event(SDL_Event event) {
 	}
 
     if(event.type == SDL_KEYDOWN) {
-		if(event.key.keysym.sym == SDLK_w) {
+		if(event.key.keysym.sym == SDLK_F8) { // Reload UI
+			for (int i = 0; i < rmlContext->GetNumDocuments(); i++)
+			{
+				Rml::ElementDocument* document = rmlContext->GetDocument(i);
+				const Rml::String& src = document->GetSourceURL();
+				if (src.size() > 4 && src.substr(src.size() - 4) == ".rml")
+				{
+					document->ReloadStyleSheet();
+				}
+			}
+			return true;
+		} else if(event.key.keysym.sym == SDLK_w) {
 			moveFront = 1;
 			return true;
 		} else if(event.key.keysym.sym == SDLK_s) {
