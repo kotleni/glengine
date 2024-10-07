@@ -27,7 +27,8 @@ MessageCallback( GLenum source,
                  const GLchar* message,
                  const void* userParam )
 {
-  fprintf( stderr, "GL: %s\n", message );
+  //fprintf( stderr, "GL: %s\n", message );
+  logger()->logError("GL: %s\n", message);
 }
 
 bool processKeyDownShortcuts(Rml::Context* context, Rml::Input::KeyIdentifier key, int key_modifier, float native_dp_ratio, bool priority) {
@@ -57,7 +58,7 @@ void Engine::init(int argc, char ** argv) {
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
-		printf("Error: %s\n", SDL_GetError());
+		logger()->logError("SDL Error: %s\n", SDL_GetError());
 		return;
 	}
 	// GL 3.0 + GLSL 130

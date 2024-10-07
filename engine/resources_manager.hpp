@@ -8,6 +8,7 @@
 #include <filesystem>
 #include "shader.hpp"
 #include "model.hpp"
+#include "logger.hpp"
 
 #define SHADERS_FOLDER "../assets/shaders/"
 #define MODELS_FOLDER "../assets/models/"
