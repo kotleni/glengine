@@ -21,14 +21,14 @@ public:
         Shader *shader
     );
 
-    std::string getName();
+    // std::string getName();
 
-    glm::vec3 getPosition();
-    glm::vec3 getRotation();
-    glm::vec3 getScale();
+    // glm::vec3 getPosition();
+    // glm::vec3 getRotation();
+    // glm::vec3 getScale();
 
-    Model *getModel();
-    Shader *getShader();
+    // Model *getModel();
+    // Shader *getShader();
 };
 
 #endif

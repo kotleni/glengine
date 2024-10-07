@@ -166,6 +166,7 @@ GameObject *Engine::createGameObject(
 		shader
 	);
 	gameObjects->push_back(gObject);
+	return gObject;
 }
 
 void Engine::run() {
