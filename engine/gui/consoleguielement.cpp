@@ -17,13 +17,25 @@ void ConsoleGuiElement::update() {
 }
 
 bool ConsoleGuiElement::processEvent(SDL_Event event) {
-    if(event.type == SDL_KEYUP && event.key.keysym.sym == SDLK_F1) {
-        if(elementDocument->IsVisible())
-            elementDocument->Hide();
-        else
-            elementDocument->Show();
+    if(event.type != SDL_KEYUP) return false;
 
-        return true;
+    switch(event.key.keysym.sym) {
+        case SDLK_F1:
+            if(elementDocument->IsVisible())
+                elementDocument->Hide();
+            else
+                elementDocument->Show();
+
+            return true;
+
+        case SDLK_RETURN:
+            // TODO: Check is in focus
+            if(elementDocument->IsVisible()) {
+                Rml::Element *textField = elementDocument->GetElementById("input");
+                Rml::String string = textField->GetAttribute<Rml::String>("value", "");
+                std::cout << string << std::endl;
+            }
+            return true;
     }
 
     return false;
