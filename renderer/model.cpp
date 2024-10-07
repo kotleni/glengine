@@ -35,7 +35,7 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
     }
     else
     {
-        globalLogger.logInfo("Texture failed to load at path", path);
+        LOG_INFO("Texture failed to load at path", path);
         stbi_image_free(data);
     }
 
@@ -148,7 +148,7 @@ std::vector<Texture> textures;
                 textures.push_back(texture);
                 textures_loaded.push_back(texture);  // store it as texture loaded for entire model, to ensure we won't unnecessary load duplicate textures.
                 
-                globalLogger.logInfo("Texture for model loaded: {}", typeName.c_str());
+                LOG_INFO("Texture for model loaded: {}", typeName.c_str());
             }
         }
         return textures;

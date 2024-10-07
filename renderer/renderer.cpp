@@ -104,5 +104,5 @@ void Renderer::createLight(glm::vec3 position) {
     DirectionalLight directional = DirectionalLight(position);
     this->lights.push_back(directional);
 
-    globalLogger.logInfo("New light source is created at (%d, %d, %d).", position.x, position.y, position.z);
+    LOG_INFO("New light source is created at (%d, %d, %d).", position.x, position.y, position.z);
 }

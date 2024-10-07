@@ -12,6 +12,10 @@
 #define LOGGER_PREFIX_WARN "[WARN] "
 #define LOGGER_PREFIX_ERROR "[ERROR] "
 
+#define LOG_INFO(...) globalLogger.logInfo(__VA_ARGS__)
+#define LOG_WARN(...) globalLogger.logWarn(__VA_ARGS__)
+#define LOG_ERROR(...) globalLogger.logError(__VA_ARGS__)
+
 class Logger {
 private:
     std::vector<std::string> logs;
