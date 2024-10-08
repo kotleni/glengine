@@ -13,12 +13,23 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install Archlinux
-      run: curl -L https://github.com/zaoqi/github-actions-archlinux/raw/master/install.sh | sh
-      
+
+    - name: Building RmlUI dep
+      run: |
+        git clone https://github.com/mikke89/RmlUi.git
+        cd RmlUI
+        mkdir build
+        cd build
+        cmake ..
+        make
+        sudo make install
+        cd ..
+        
     - name: Installing deps
       run: |
-        sudo pacman -Sy rmlui sdl2 sdl2image assimp glm glfw glew
+        sudo apt-get -y update
+        sudo apt-get -y install cmake make gcc
+        sudo apt-get -y install libsdl2-dev libsdl2image-dev libglew-dev libglut-dev libglm-dev libassimp-dev
         
     - name: Makedir and navigate
       run: mkdir build && cd build
@@ -27,7 +38,7 @@ jobs:
       run: cmake ..
       
     - name: Make it
-      run: make -j8
+      run: make
       
     - name: Upload artifacts
       uses: actions/download-artifact@v4.1.8
