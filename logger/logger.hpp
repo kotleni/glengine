@@ -5,7 +5,7 @@
 #include <vector>
 #include <iostream>
 #include <stdarg.h>
-#include <format>
+#include "fmt/format.h"
 
 #define LOGGER_LINES_LIMIT 64
 #define LOGGER_PREFIX_INFO "[INFO] "
@@ -21,8 +21,8 @@ private:
     std::vector<std::string> logs;
 
     template<class... Args>
-    void log(const char *prefix, std::string_view rt_fmt_str, Args&&... args) {
-        std::string line = std::vformat(rt_fmt_str, std::make_format_args(args...));
+    void log(const char *prefix, std::string rt_fmt_str, Args&&... args) {
+        std::string line = fmt::format(rt_fmt_str, args...);
         std::string totalLine = std::string(prefix);
         totalLine.append(line);
     
@@ -38,17 +38,17 @@ public:
     Logger();
 
     template<class... Args>
-    void logInfo(std::string_view rt_fmt_str, Args&&... args) {
+    void logInfo(std::string rt_fmt_str, Args&&... args) {
         this->log(LOGGER_PREFIX_INFO, rt_fmt_str, args...);
     }
 
     template<class... Args>
-    void logWarning(std::string_view rt_fmt_str, Args&&... args) {
+    void logWarning(std::string rt_fmt_str, Args&&... args) {
         this->log(LOGGER_PREFIX_WARN, rt_fmt_str, args...);
     }
 
     template<class... Args>
-    void logError(std::string_view rt_fmt_str, Args&&... args) {
+    void logError(std::string rt_fmt_str, Args&&... args) {
         this->log(LOGGER_PREFIX_ERROR, rt_fmt_str, args...);
     }
 

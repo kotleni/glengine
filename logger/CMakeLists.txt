@@ -9,5 +9,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
 add_library(${PROJECT_NAME}
     SHARED 
+    
+    fmt/format.cpp
+    fmt/posix.cpp
     logger.cpp
 )
