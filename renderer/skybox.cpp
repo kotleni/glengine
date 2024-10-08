@@ -74,7 +74,8 @@ void Skybox::load(std::string name) {
 		data = stbi_load(path.c_str(), &width, &height, &nrChannels, 0);
 		if(data != nullptr)
             glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-
+        else
+            LOG_ERROR("Can't load skybox part {}", path.c_str());
         // TODO: Load error texture instead
 	}
 
