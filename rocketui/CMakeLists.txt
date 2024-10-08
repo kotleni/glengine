@@ -6,12 +6,12 @@ include(../cmake/detect_platform.cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
+find_package(PkgConfig REQUIRED)
+
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(RmlUi REQUIRED)
-find_package(SDL2 REQUIRED)
-find_package(SDL2_Image REQUIRED)
-
+pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
 # macOS should get gl from frameworks
 if(MACOSX)
     list(APPEND EXTRA_LIBS
@@ -38,8 +38,7 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
-    SDL2::SDL2 
-    SDL2_image::SDL2_image 
+    ${SDL2_LIBRARIES}
     GLEW::GLEW 
     RmlUi::RmlUi
 )

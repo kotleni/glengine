@@ -6,7 +6,9 @@ include(../cmake/detect_platform.cmake)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/)
 
-find_package(SDL2 REQUIRED)
+find_package(PkgConfig REQUIRED)
+
+pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
 find_package(GLEW REQUIRED)

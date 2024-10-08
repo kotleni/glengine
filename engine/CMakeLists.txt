@@ -19,8 +19,10 @@ endif()
 set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 
+find_package(PkgConfig REQUIRED)
+
 find_package(Threads REQUIRED)
-find_package(SDL2 REQUIRED)
+pkg_check_modules(SDL2 REQUIRED sdl2 SDL2_image)
 find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
 find_package(GLEW REQUIRED)
