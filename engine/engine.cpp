@@ -202,11 +202,11 @@ void Engine::run() {
 	
 	// TODO: Load from level file
 	this->createGameObject(
-		"castle",
-		"../assets/models/Castle/castle.obj",
+		"Sponza",
+		"../assets/models/Sponza/sponza.obj",
 		glm::vec3(0, 0, 0),
 		glm::vec3(0, 0, 0),
-		glm::vec3(1, 1, 1)
+		glm::vec3(0.09, 0.09, 0.09)
 	);
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
