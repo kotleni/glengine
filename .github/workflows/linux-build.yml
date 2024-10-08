@@ -31,14 +31,12 @@ jobs:
         sudo make install
         cd ..
       
-    - name: Cmake it
+    - name: Cmake and build
       run: |
         mkdir build
         cd build
         cmake ..
-      
-    - name: Make it
-      run: make
+        make
       
     - name: Upload artifacts
       uses: actions/download-artifact@v4.1.8
