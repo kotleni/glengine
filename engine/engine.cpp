@@ -357,9 +357,10 @@ void Engine::shutdown() {
 	Rml::Shutdown();
 	Backend::Shutdown();
 
+	SDL_GL_DeleteContext(this->renderer->getGLContext());
 	renderer->shutdown();
 	renderer = nullptr;
-	SDL_GL_DeleteContext(this->renderer->getGLContext());
+	
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
