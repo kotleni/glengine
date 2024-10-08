@@ -7,7 +7,7 @@ const float minPitch = -89.0f;
 const float maxPitch = 89.0f;
 
 Camera::Camera(glm::vec2 render_size) {
-    proj = glm::perspective(glm::radians(fov), (float)render_size.x / (float)render_size.y, 0.1f, 100.0f);
+    proj = glm::perspective(glm::radians(fov), (float)render_size.x / (float)render_size.y, 0.1f, 1000.0f);
 }
 
 void Camera::look_relative(float xrel, float yrel) {
