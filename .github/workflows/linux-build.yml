@@ -17,7 +17,7 @@ jobs:
     - name: Building RmlUI dep
       run: |
         git clone https://github.com/mikke89/RmlUi.git
-        cd RmlUI
+        cd RmlUi
         mkdir build
         cd build
         cmake ..
