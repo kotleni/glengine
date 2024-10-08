@@ -30,11 +30,17 @@ jobs:
         make
         sudo make install
         cd ..
+
+    - name: Get actual version of clang (hate u, Ubuntu)
+      run: |
+        wget https://apt.llvm.org/llvm.sh
+        chmod u+x llvm.sh
+        sudo ./llvm.sh 18
       
     - name: Cmake and build
       run: |
-        export CC=/usr/bin/clang
-        export CXX=/usr/bin/clang++
+        export CC=/usr/bin/clang-18
+        export CXX=/usr/bin/clang++-18
         mkdir build
         cd build
         cmake ..
