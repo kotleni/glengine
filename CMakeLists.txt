@@ -5,6 +5,7 @@ set(CMAKE_BUILD_PARALLEL_LEVEL 3)
 project(engine VERSION 0.1.0)
 
 set(CMAKE_BUILD_TYPE Debug)
+set (CMAKE_CXX_STANDARD 20)
 
 include(cmake/detect_platform.cmake)
 
