@@ -30,6 +30,7 @@ find_package(OpenGL REQUIRED)
 find_package(assimp REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(RmlUi REQUIRED)
+find_package(Vulkan REQUIRED)
 
 # macOS should get gl and sdl2 from frameworks
 if(OSX)
@@ -57,6 +58,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 	${GLUT_INCLUDE_DIRS}
 	${ASSIMP_INCLUDE_DIRS}
 	${GLEW_INCLUDE_DIRS}
+	${Vulkan_INCLUDE_DIRS}
+
 	${CMAKE_SOURCE_DIR}/thirdparty
 	
 	${CMAKE_SOURCE_DIR}/common
@@ -95,6 +98,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
 target_link_libraries(${PROJECT_NAME} PRIVATE ${ASSIMP_LIBRARIES})
 target_link_libraries(${PROJECT_NAME} PRIVATE GLEW::GLEW)
 target_link_libraries(${PROJECT_NAME} PRIVATE RmlUi::RmlUi)
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARIES})
 
 
 # Link libraries
