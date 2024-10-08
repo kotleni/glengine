@@ -14,6 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Installing deps
+      run: |
+        sudo apt-get -y update
+        sudo apt-get -y install cmake make gcc libfreetype-dev
+        sudo apt-get -y install libsdl2-dev libsdl2-image-dev libglew-dev libglm-dev libassimp-dev freeglut3-dev
+
     - name: Building RmlUI dep
       run: |
         git clone https://github.com/mikke89/RmlUi.git
@@ -24,12 +30,6 @@ jobs:
         make
         sudo make install
         cd ..
-        
-    - name: Installing deps
-      run: |
-        sudo apt-get -y update
-        sudo apt-get -y install cmake make gcc
-        sudo apt-get -y install libsdl2-dev libsdl2-image-dev libglew-dev libglm-dev libassimp-dev freeglut3-dev
       
     - name: Cmake it
       run: |
