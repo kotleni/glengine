@@ -56,7 +56,6 @@ void Engine::init(int argc, char ** argv) {
 	#else
 		props.is_tools_mode = false;
 	#endif
-	props.is_render_light = true;
 
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_GAMECONTROLLER) !=
 		0) {
@@ -172,7 +171,7 @@ GameObject *Engine::createGameObject(
     glm::vec3 rotation,
     glm::vec3 scale
 ) {
-	Shader *shader = resourcesMamanger->getShader("textured");
+	Shader *shader = resourcesMamanger->getShader("default");
 	Model *model = resourcesMamanger->getModel(modelName);
 	GameObject *gObject = new BasicGameObject(
 		name,
@@ -197,8 +196,8 @@ void Engine::run() {
 	resourcesMamanger = new ResourcesManager();
 	resourcesMamanger->loadAll();
 
-	Shader *defaultShader = resourcesMamanger->getShader("textured");
-	renderer->setDefaultShader(defaultShader);
+	Shader *directionalShadowShader = resourcesMamanger->getShader("directional_shadow_map");
+	renderer->setDirectionalShadowShader(directionalShadowShader);
 	
 	// TODO: Load from level file
 	this->createGameObject(
@@ -208,6 +207,15 @@ void Engine::run() {
 		glm::vec3(0, 0, 0),
 		glm::vec3(0.09, 0.09, 0.09)
 	);
+
+	DirectionalLightNode *directionalLightNode = new DirectionalLightNode(
+		"DirectionalLight",
+		glm::vec3(0.0f, -10.0f, 5.0f),
+		glm::vec3(1.0f, 0.0f, 0.5f),
+		2048, 2048,
+		0.5f, 0.5f
+	);
+	this->gameObjects->push_back(directionalLightNode);
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
@@ -331,15 +339,33 @@ void Engine::on_render() {
 	}
 
 	std::vector<Renderable> renderables;
-	// Preapre array of renderables
+	std::vector<PointLight*> pointLights;
+	std::vector<SpotLight*> spotLights;
+	DirectionalLight *directionalLight = nullptr;
+
+	// Prepare to rendering frame
 	for(int i = 0; i < this->gameObjects->size(); i +=1) {
 		GameObject *gObj = this->gameObjects->at(i);
-		Model *model = gObj->getModel();
-		Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale()};
-		renderables.push_back(renderable);
+
+		if(typeid(*gObj) == typeid(DirectionalLightNode)) { // DirectionalLightNode
+			if(directionalLight != nullptr) {
+				LOG_ERROR("Panic! Multiple directional lights is not allowed.");
+				return;
+				// TODO: Panic
+			}
+			DirectionalLightNode *directionalLightNode = static_cast<DirectionalLightNode*>(gObj);
+			directionalLight = directionalLightNode->directionalLight;
+		} else if(typeid(*gObj) == typeid(BasicGameObject)) { // BasicGameObject
+			Model *model = gObj->getModel();
+			Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale() };
+			renderables.push_back(renderable);
+		} else {
+			// TODO: Panic
+		}
 	}
 
-	renderer->renderFrame(camera, renderables, props.is_render_light);
+	renderer->renderShadowMap(directionalLight);
+	renderer->renderFrame(camera, renderables, directionalLight, pointLights, spotLights);
 }
 
 void Engine::on_render_gui() {

@@ -24,12 +24,17 @@ endif()
 
 add_library(${PROJECT_NAME} SHARED
 	shader.cpp
-	directional_light.cpp
 	skybox.cpp
 	camera.cpp
     renderer.cpp
 	model.cpp
 	mesh.cpp
+
+	ShadowMap.cpp
+	Light.cpp
+	DirectionalLight.cpp
+	PointLight.cpp
+	SpotLight.cpp
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

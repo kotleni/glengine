@@ -99,10 +99,15 @@ void Skybox::draw(Camera *camera) {
     glDepthMask(GL_FALSE);
 
 	shader->use();
+    
 	glm::mat4 view = glm::mat4(glm::mat3(camera->get_view()));
-	shader->setInt("skybox", 1);
-	shader->setMat4("view", view);
-    shader->setMat4("projection", camera->get_projection());
+    glm::mat4 projection = camera->get_projection();
+    
+    auto uniformProjection = shader->getProjectionLocation();
+    auto uniformView = shader->getViewLocation();
+
+    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(view));
 
 	glBindVertexArray(skyboxVAO);
     glActiveTexture(GL_TEXTURE0);

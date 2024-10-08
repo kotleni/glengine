@@ -36,13 +36,14 @@
 #include "engine_props.hpp"
 #include "camera.hpp"
 #include "model.hpp"
-#include "directional_light.hpp"
 #include <skybox.hpp>
 #include "resources_manager.hpp"
 #include "gameobject.hpp"
 #include "basicgameobject.hpp"
 #include <renderer.hpp>
 #include "logger.hpp"
+
+#include "nodes/DirectionalLightNode.hpp"
 
 #include "gui/baseguielement.h"
 #include "gui/consoleguielement.h"

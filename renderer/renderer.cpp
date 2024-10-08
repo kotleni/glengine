@@ -1,5 +1,9 @@
 #include "renderer.hpp"
 
+GLuint uniformProjection = 0, uniformModel = 0, uniformView = 0, uniformEyePosition = 0,
+uniformSpecularIntensity = 0, uniformShininess = 0;
+glm::mat4 directionalLightTransform;
+
 Renderer::Renderer(SDL_Window *window, SDL_GLContext gl_context) {
     this->gl_context = gl_context;
     this->window = window;
@@ -8,8 +12,6 @@ Renderer::Renderer(SDL_Window *window, SDL_GLContext gl_context) {
 
     this->skybox = new Skybox();
 	this->skybox->load("skybox1");
-
-    this->createLight(glm::vec3(32, 32, 32));
 }
 
 void Renderer::shutdown() {
@@ -30,8 +32,8 @@ glm::vec2 Renderer::get_render_size() {
 	return glm::vec2(w, h);
 }
 
-void Renderer::setDefaultShader(Shader *shader) {
-    this->defaultShader = shader;
+void Renderer::setDirectionalShadowShader(Shader *shader) {
+    this->directionalShadowShader = shader;
 }
 
 void Renderer::beginFrame() {
@@ -47,41 +49,73 @@ void Renderer::beginFrame() {
 	glClear(clearMask);
 }
 
-void Renderer::renderFrame(Camera *camera, std::vector<Renderable> renderables, bool isRenderLight) {
+void Renderer::renderShadowMap(DirectionalLight* light) {
+    this->directionalShadowShader->use();
+
+    glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
+
+	light->getShadowMap()->write();
+	glClear(GL_DEPTH_BUFFER_BIT);
+
+    directionalLightTransform = light->calculateLightTransform();
+	uniformModel = directionalShadowShader->getModelLocation();
+	directionalShadowShader->setDirectionalLightTransform(&directionalLightTransform);
+
+	// TODO: renderScene();
+
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::renderFrame(
+    Camera *camera,
+    std::vector<Renderable> renderables,
+    DirectionalLight *directionalLight,
+    std::vector<PointLight*> pointLights,
+    std::vector<SpotLight*> spotLights
+){
+    if(directionalLight == nullptr) {
+        LOG_ERROR("Panic! No any directional light is initialized.");
+        return;
+        // TODO: Panic engine
+    }
+
     skybox->draw(camera);
 
     // Render all renderables
     for(int i = 0; i < renderables.size(); i += 1) {
         Renderable renderable = renderables.at(i);
-        // glBindVertexArray(VAO);
-
         Shader *shader = renderable.shader;
 
         // Use shader
         shader->use();
         camera->applyToShader(shader);
-        shader->setBool("features.is_use_light", isRenderLight);
 
-        // Apply light to shader
-        for(int i = 0; i < lights.size(); i += 1) {
-            DirectionalLight light = lights.at(i);
-            light.apply(shader);
-        }
+        // Directional light
+        directionalLightTransform = directionalLight->calculateLightTransform();
+        shader->setDirectionalLightTransform(&directionalLightTransform);
+        shader->setDirectionalLight(directionalLight);
+
+        // Shadow map
+        directionalLight->getShadowMap()->read(GL_TEXTURE1);
+        shader->setDirectionalShadowMap(GL_TEXTURE1);
+
+        // Point lights
+        if(!pointLights.empty())
+            shader->setPointLights(pointLights[0], pointLights.size());
+
+        // Spot lights
+        if(!spotLights.empty())
+            shader->setSpotLights(spotLights[0], spotLights.size());
    
+        // Calc model
 	    glm::mat4 model = glm::mat4(1.0f);
 	    model = glm::translate(model, renderable.position);
         model = glm::scale(model, renderable.scale);
 	    // TODO: impl rotating model = glm::rotate()
 
-        // TODO: move binding to material
-	    // Bind model matrix
-	    shader->setMat4("model", model);
-
-        // Material bind
-	    shader->setVec3("material.ambient", glm::vec3(0.6f, 0.6f, 0.6f));
-	    shader->setVec3("material.diffuse", glm::vec3(0.6f, 0.6f, 0.3f));
-	    shader->setVec3("material.specular", glm::vec3(0.633f, 0.727811f, 0.633f));
-	    shader->setFloat("material.shininess", 76.8f);
+        // Apply model
+        uniformModel = shader->getModelLocation();
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
         renderable.model->Draw(*shader);
     }
@@ -96,13 +130,4 @@ void Renderer::endFrame(int fpsMax, bool enableVsync) {
 	if(!enableVsync) {
 		SDL_Delay(1000 / fpsMax);
 	}
-}
-
-// TODO: i need to make universal Light abstract class for all lights
-// TODO: and put here is struct? or smthing
-void Renderer::createLight(glm::vec3 position) {
-    DirectionalLight directional = DirectionalLight(position);
-    this->lights.push_back(directional);
-
-    LOG_INFO("New light source is created at ({}, {}, {}).", position.x, position.y, position.z);
 }

@@ -38,9 +38,13 @@ void Camera::update() {
 }
 
 void Camera::applyToShader(Shader *shader) {
-    shader->setMat4("projection", this->get_projection());
-	shader->setMat4("view", this->get_view());
-	shader->setVec3("viewPos", this->get_position());
+    auto uniformProjection = shader->getProjectionLocation();
+    auto uniformView = shader->getViewLocation();
+    auto uniformEyePosition = shader->getEyePositionLocation();
+
+    glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(this->get_projection()));
+	glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(this->get_view()));
+	glUniform3f(uniformEyePosition, this->get_position().x, this->get_position().y, this->get_position().z);
 }
 
 glm::mat4 Camera::get_projection() {

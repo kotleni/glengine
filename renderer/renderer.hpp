@@ -19,7 +19,11 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 
-#include <directional_light.hpp>
+#include <ShadowMap.hpp>
+#include <DirectionalLight.hpp>
+#include <PointLight.hpp>
+#include <SpotLight.hpp>
+
 #include <skybox.hpp>
 
 #include <renderable.hpp>
@@ -33,9 +37,8 @@ private:
     glm::vec4 clearColor;
     bool isEnableDepthBuffer;
 
-    Shader *defaultShader;
+    Shader *directionalShadowShader;
     Skybox *skybox;
-    std::vector<DirectionalLight> lights;
 public:
     Renderer(SDL_Window *window, SDL_GLContext gl_context);
     void shutdown();
@@ -51,13 +54,32 @@ public:
 
     glm::vec2 get_render_size();
 
-    void setDefaultShader(Shader *shader);
+    void setDirectionalShadowShader(Shader *shader);
 
     void beginFrame();
-    void renderFrame(Camera *camera, std::vector<Renderable> renderables, bool isRenderLight);
-    void endFrame(int fpsMax, bool enableVsync);
 
-    void createLight(glm::vec3 position);
+    void renderShadowMap(DirectionalLight* light);
+
+    /* 
+        Render single frame for camera
+
+        @param camera Camera to rendering into using parameters.
+        @param renderables List of prepared renderables.
+        @param directionalLight Single point of truth about dir light.
+        @param pointsLigts List of point lights.
+        @param spotLights List of spot lights.
+
+        @attention Thanks Skrillex, for awesome Dubstep.
+    */
+    void renderFrame(
+        Camera *camera,
+        std::vector<Renderable> renderables,
+        DirectionalLight *directionalLight,
+        std::vector<PointLight*> pointLights,
+        std::vector<SpotLight*> spotLights
+    );
+
+    void endFrame(int fpsMax, bool enableVsync);
 };
 
 #endif

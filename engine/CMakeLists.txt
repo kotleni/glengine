@@ -44,6 +44,8 @@ add_library(${PROJECT_NAME}
     SHARED
 	gui/consoleguielement.cpp
 
+	nodes/DirectionalLightNode.cpp
+
 	engine.cpp
 	basicgameobject.cpp
 	resources_manager.cpp
