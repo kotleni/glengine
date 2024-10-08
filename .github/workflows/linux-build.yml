@@ -29,7 +29,7 @@ jobs:
       run: |
         sudo apt-get -y update
         sudo apt-get -y install cmake make gcc
-        sudo apt-get -y install libsdl2-dev libsdl2image-dev libglew-dev libglut-dev libglm-dev libassimp-dev
+        sudo apt-get -y install libsdl2-dev libsdl2-image-dev libglew-dev libglm-dev libassimp-dev freeglut3-dev
         
     - name: Makedir and navigate
       run: mkdir build && cd build
