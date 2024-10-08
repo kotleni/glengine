@@ -1,0 +1,33 @@
+name: LinuxUbuntuBuild
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Archlinux
+      run: curl -L https://github.com/zaoqi/github-actions-archlinux/raw/master/install.sh | sh
+      
+    - name: Installing deps
+      run: |
+        sudo pacman -Sy rmlui sdl2 sdl2image assimp glm glfw glew
+        
+    - name: Makedir and navigate
+      run: mkdir build && cd build
+      
+    - name: Cmake it
+      run: cmake ..
+      
+    - name: Make it
+      run: make -j8
+      
+    - name: Upload artifacts
+      uses: actions/download-artifact@v4.1.8
