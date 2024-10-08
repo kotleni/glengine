@@ -30,12 +30,12 @@ jobs:
         sudo apt-get -y update
         sudo apt-get -y install cmake make gcc
         sudo apt-get -y install libsdl2-dev libsdl2-image-dev libglew-dev libglm-dev libassimp-dev freeglut3-dev
-        
-    - name: Makedir and navigate
-      run: mkdir build && cd build && pwd
       
     - name: Cmake it
-      run: cmake ..
+      run: |
+        mkdir build
+        cd build
+        cmake ..
       
     - name: Make it
       run: make
