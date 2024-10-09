@@ -386,9 +386,9 @@ void Engine::on_render() {
 }
 
 void Engine::on_render_gui() {
-	// Backend::BeginFrame();
-	// rmlContext->Render();
-	// Backend::PresentFrame();
+	Backend::BeginFrame();
+	rmlContext->Render();
+	Backend::PresentFrame();
 }
 
 void Engine::shutdown() {
