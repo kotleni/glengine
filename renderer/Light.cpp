@@ -13,12 +13,12 @@ Light::Light(
     float ambientIntensity,
     float diffuceIntensity
 ) {
-	colour = color;
-	ambientIntensity = ambientIntensity;
-	diffuseIntensity = diffuceIntensity;
+	this->colour = color;
+	this->ambientIntensity = ambientIntensity;
+	this->diffuseIntensity = diffuceIntensity;
 
-	shadowMap = new ShadowMap();
-	shadowMap->init(shadowWidth, shadowHeight);
+	this->shadowMap = new ShadowMap();
+	this->shadowMap->init(shadowWidth, shadowHeight);
 }
 
 Light::~Light() {
