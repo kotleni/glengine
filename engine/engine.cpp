@@ -302,7 +302,7 @@ void Engine::run() {
 		this->renderer->beginFrame();
 		{
 			on_render(renderables, directionalLight, pointLights, spotLights);
-        	//on_render_gui();
+        	on_render_gui();
 		}
         this->renderer->endFrame(props.max_fps, props.is_vsync);
     }
