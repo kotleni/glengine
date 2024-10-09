@@ -244,6 +244,24 @@ void Engine::run() {
 		}
 		rmlContext->Update();
 
+		DirectionalLight *directionalLight = nullptr;
+
+		// Prepare to rendering shadow map
+		for(int i = 0; i < this->gameObjects->size(); i +=1) {
+			GameObject *gObj = this->gameObjects->at(i);
+
+			if(typeid(*gObj) == typeid(DirectionalLightNode)) { // DirectionalLightNode
+				if(directionalLight != nullptr) {
+					LOG_ERROR("Panic! Multiple directional lights is not allowed.");
+					return;
+					// TODO: Panic
+				}
+				DirectionalLightNode *directionalLightNode = static_cast<DirectionalLightNode*>(gObj);
+				directionalLight = directionalLightNode->directionalLight;
+			}
+		}
+		renderer->renderShadowMap(directionalLight);
+
 		this->renderer->beginFrame();
 		{
 			on_render();
@@ -364,14 +382,13 @@ void Engine::on_render() {
 		}
 	}
 
-	renderer->renderShadowMap(directionalLight);
 	renderer->renderFrame(camera, renderables, directionalLight, pointLights, spotLights);
 }
 
 void Engine::on_render_gui() {
-	Backend::BeginFrame();
-	rmlContext->Render();
-	Backend::PresentFrame();
+	// Backend::BeginFrame();
+	// rmlContext->Render();
+	// Backend::PresentFrame();
 }
 
 void Engine::shutdown() {
