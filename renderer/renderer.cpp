@@ -49,7 +49,7 @@ void Renderer::beginFrame() {
 	glClear(clearMask);
 }
 
-void Renderer::renderShadowMap(DirectionalLight* light) {
+void Renderer::renderShadowMap(DirectionalLight* light, std::vector<Renderable> renderables) {
     this->directionalShadowShader->use();
 
     glViewport(0, 0, light->getShadowMap()->getShadowWidth(), light->getShadowMap()->getShadowHeight());
@@ -61,9 +61,69 @@ void Renderer::renderShadowMap(DirectionalLight* light) {
 	uniformModel = directionalShadowShader->getModelLocation();
 	directionalShadowShader->setDirectionalLightTransform(&directionalLightTransform);
 
-	// TODO: renderScene();
+	this->renderPass(
+        nullptr, // Camera can be nullptr is isForBackingShadowMap = true
+        renderables, 
+        light, 
+        std::vector<PointLight*>(), 
+        std::vector<SpotLight*>(),
+        true // isForBackingShadowMap
+    );
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void Renderer::renderPass(
+    Camera *camera,
+    std::vector<Renderable> renderables,
+    DirectionalLight *directionalLight,
+    std::vector<PointLight*> pointLights,
+    std::vector<SpotLight*> spotLights,
+    bool isForBackingShadowMap
+) {
+    // Render all renderables
+    for(int i = 0; i < renderables.size(); i += 1) {
+        Renderable renderable = renderables.at(i);
+        Shader *shader = renderable.shader;
+    
+        // Directional light
+        if(!isForBackingShadowMap) {
+            // Use shader
+            shader->use();
+            camera->applyToShader(shader);
+
+            // Put directional light 
+            directionalLightTransform = directionalLight->calculateLightTransform();
+            shader->setDirectionalLightTransform(&directionalLightTransform);
+            shader->setDirectionalLight(directionalLight);
+
+            // Shadow map
+            directionalLight->getShadowMap()->read(GL_TEXTURE1);
+            shader->setDirectionalShadowMap(1);
+
+            // Point lights
+            if(!pointLights.empty())
+                shader->setPointLights(pointLights[0], pointLights.size());
+
+            // Spot lights
+            if(!spotLights.empty())
+                shader->setSpotLights(spotLights[0], spotLights.size());
+        }
+   
+        // Calc model
+	    glm::mat4 model = glm::mat4(1.0f);
+	    model = glm::translate(model, renderable.position);
+        model = glm::scale(model, renderable.scale);
+	    // TODO: impl rotating model = glm::rotate()
+
+        // Apply model
+        uniformModel = shader->getModelLocation();
+        if(isForBackingShadowMap)
+            uniformModel = this->directionalShadowShader->getModelLocation();
+        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
+
+        renderable.model->Draw(*shader, !isForBackingShadowMap);
+    }
 }
 
 void Renderer::renderFrame(
@@ -81,44 +141,14 @@ void Renderer::renderFrame(
 
     skybox->draw(camera);
 
-    // Render all renderables
-    for(int i = 0; i < renderables.size(); i += 1) {
-        Renderable renderable = renderables.at(i);
-        Shader *shader = renderable.shader;
-
-        // Use shader
-        shader->use();
-        camera->applyToShader(shader);
-
-        // Directional light
-        directionalLightTransform = directionalLight->calculateLightTransform();
-        shader->setDirectionalLightTransform(&directionalLightTransform);
-        shader->setDirectionalLight(directionalLight);
-
-        // Shadow map
-        directionalLight->getShadowMap()->read(GL_TEXTURE1);
-        shader->setDirectionalShadowMap(1);
-
-        // Point lights
-        if(!pointLights.empty())
-            shader->setPointLights(pointLights[0], pointLights.size());
-
-        // Spot lights
-        if(!spotLights.empty())
-            shader->setSpotLights(spotLights[0], spotLights.size());
-   
-        // Calc model
-	    glm::mat4 model = glm::mat4(1.0f);
-	    model = glm::translate(model, renderable.position);
-        model = glm::scale(model, renderable.scale);
-	    // TODO: impl rotating model = glm::rotate()
-
-        // Apply model
-        uniformModel = shader->getModelLocation();
-        glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
-
-        renderable.model->Draw(*shader);
-    }
+    this->renderPass(
+        camera,
+        renderables,
+        directionalLight,
+        pointLights,
+        spotLights,
+        false // isForBackingShadowMap
+    );
 }
 
 void Renderer::endFrame(int fpsMax, bool enableVsync) {

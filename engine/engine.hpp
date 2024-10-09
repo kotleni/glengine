@@ -53,7 +53,12 @@
 class Engine {
 private:
     bool on_event(SDL_Event event); 
-    void on_render();
+    void on_render(
+        std::vector<Renderable> renderables,
+        DirectionalLight *directionalLight,
+        std::vector<PointLight*> pointLights,
+        std::vector<SpotLight*> spotLights
+    );
     void on_render_gui();
 
     SDL_Window *window;

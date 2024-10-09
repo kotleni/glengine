@@ -17,7 +17,7 @@ class Model {
 public:
     Model(std::string path) { loadModel(path); }
 
-    void Draw(Shader &shader);
+    void Draw(Shader &shader, bool isWillUseTextures);
 private:
     // model data
     std::vector<Mesh> meshes;

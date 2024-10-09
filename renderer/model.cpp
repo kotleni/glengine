@@ -42,9 +42,9 @@ unsigned int TextureFromFile(const char *path, const std::string &directory, boo
     return textureID;
 }
 
-void Model::Draw(Shader &shader) {
+void Model::Draw(Shader &shader, bool isWillUseTextures) {
     for(unsigned int i = 0; i < meshes.size(); i++)
-        meshes[i].Draw(shader);
+        meshes[i].Draw(shader, isWillUseTextures);
 }
 
 void Model::loadModel(std::string path) {

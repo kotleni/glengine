@@ -265,9 +265,12 @@ void Engine::run() {
 		}
 		rmlContext->Update();
 
+		std::vector<Renderable> renderables;
+		std::vector<PointLight*> pointLights;
+		std::vector<SpotLight*> spotLights;
 		DirectionalLight *directionalLight = nullptr;
 
-		// Prepare to rendering shadow map
+		// Prepare to rendering frame
 		for(int i = 0; i < this->gameObjects->size(); i +=1) {
 			GameObject *gObj = this->gameObjects->at(i);
 
@@ -279,14 +282,27 @@ void Engine::run() {
 				}
 				DirectionalLightNode *directionalLightNode = static_cast<DirectionalLightNode*>(gObj);
 				directionalLight = directionalLightNode->directionalLight;
+			} else if(typeid(*gObj) == typeid(BasicGameObject)) { // BasicGameObject
+				Model *model = gObj->getModel();
+				Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale() };
+				renderables.push_back(renderable);
+			} else if(typeid(*gObj) == typeid(PointLight)) {
+				PointLightNode *pointLightNode = static_cast<PointLightNode*>(gObj);
+				pointLights.push_back(pointLightNode->pointLight);
+			} else if(typeid(*gObj) == typeid(PointLight)) {
+				SpotLightNode *spotLightNode = static_cast<SpotLightNode*>(gObj);
+				spotLights.push_back(spotLightNode->spotLight);
+			} else {
+				// TODO: Panic
 			}
 		}
-		renderer->renderShadowMap(directionalLight);
+
+		renderer->renderShadowMap(directionalLight, renderables);
 
 		this->renderer->beginFrame();
 		{
-			on_render();
-        	on_render_gui();
+			on_render(renderables, directionalLight, pointLights, spotLights);
+        	//on_render_gui();
 		}
         this->renderer->endFrame(props.max_fps, props.is_vsync);
     }
@@ -364,7 +380,12 @@ bool Engine::on_event(SDL_Event event) {
 	return false;
 }
 
-void Engine::on_render() {
+void Engine::on_render(
+	std::vector<Renderable> renderables,
+    DirectionalLight *directionalLight,
+    std::vector<PointLight*> pointLights,
+    std::vector<SpotLight*> spotLights
+) {
 	// Update camera is mouse pinned
 	if(SDL_GetRelativeMouseMode()) {
 		// Camera move
@@ -375,38 +396,6 @@ void Engine::on_render() {
 
 		// Update camera
 		camera->update();
-	}
-
-	std::vector<Renderable> renderables;
-	std::vector<PointLight*> pointLights;
-	std::vector<SpotLight*> spotLights;
-	DirectionalLight *directionalLight = nullptr;
-
-	// Prepare to rendering frame
-	for(int i = 0; i < this->gameObjects->size(); i +=1) {
-		GameObject *gObj = this->gameObjects->at(i);
-
-		if(typeid(*gObj) == typeid(DirectionalLightNode)) { // DirectionalLightNode
-			if(directionalLight != nullptr) {
-				LOG_ERROR("Panic! Multiple directional lights is not allowed.");
-				return;
-				// TODO: Panic
-			}
-			DirectionalLightNode *directionalLightNode = static_cast<DirectionalLightNode*>(gObj);
-			directionalLight = directionalLightNode->directionalLight;
-		} else if(typeid(*gObj) == typeid(BasicGameObject)) { // BasicGameObject
-			Model *model = gObj->getModel();
-			Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale() };
-			renderables.push_back(renderable);
-		} else if(typeid(*gObj) == typeid(PointLight)) {
-			PointLightNode *pointLightNode = static_cast<PointLightNode*>(gObj);
-			pointLights.push_back(pointLightNode->pointLight);
-		} else if(typeid(*gObj) == typeid(PointLight)) {
-			SpotLightNode *spotLightNode = static_cast<SpotLightNode*>(gObj);
-			spotLights.push_back(spotLightNode->spotLight);
-		} else {
-			// TODO: Panic
-		}
 	}
 
 	renderer->renderFrame(camera, renderables, directionalLight, pointLights, spotLights);

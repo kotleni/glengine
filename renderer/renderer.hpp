@@ -39,6 +39,16 @@ private:
 
     Shader *directionalShadowShader;
     Skybox *skybox;
+
+    void renderPass(
+        Camera *camera,
+        std::vector<Renderable> renderables,
+        DirectionalLight *directionalLight,
+        std::vector<PointLight*> pointLights,
+        std::vector<SpotLight*> spotLights,
+        bool isForBackingShadowMap
+    );
+
 public:
     Renderer(SDL_Window *window, SDL_GLContext gl_context);
     void shutdown();
@@ -58,7 +68,7 @@ public:
 
     void beginFrame();
 
-    void renderShadowMap(DirectionalLight* light);
+    void renderShadowMap(DirectionalLight* light, std::vector<Renderable> renderables);
 
     /* 
         Render single frame for camera
