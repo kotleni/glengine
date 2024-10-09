@@ -97,7 +97,7 @@ void Renderer::renderFrame(
 
         // Shadow map
         directionalLight->getShadowMap()->read(GL_TEXTURE1);
-        shader->setDirectionalShadowMap(GL_TEXTURE1);
+        shader->setDirectionalShadowMap(1);
 
         // Point lights
         if(!pointLights.empty())
