@@ -44,6 +44,8 @@
 #include "logger.hpp"
 
 #include "nodes/DirectionalLightNode.hpp"
+#include "nodes/PointLightNode.hpp"
+#include "nodes/SpotLightNode.hpp"
 
 #include "gui/baseguielement.h"
 #include "gui/consoleguielement.h"

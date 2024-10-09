@@ -217,6 +217,27 @@ void Engine::run() {
 	);
 	this->gameObjects->push_back(directionalLightNode);
 
+	PointLightNode *pointLightNode = new PointLightNode(
+		"PointLight",
+		glm::vec3(0.0f, 15.0f, 0.0f),
+		glm::vec3(1.0f, 0.2f, 0.2f),
+		0.6f, 0.5f,
+		0.3f, 0.2f, 0.1f
+	);
+	this->gameObjects->push_back(pointLightNode);
+
+	SpotLightNode *spotLightNode = new SpotLightNode(
+		"SpotLight",
+		glm::vec3(0.0f, 15.0f, 0.0f), // pos
+		glm::vec3(0.0f, 0.0f, 0.0f), // dir
+		glm::vec3(0.2f, 1.0f, 0.2f), // color
+		2048, 2048,
+		0.6f, 0.5f,
+		0.3f, 0.2f, 0.1f,
+		20.0f
+	);
+	this->gameObjects->push_back(spotLightNode);
+
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
 
@@ -377,6 +398,12 @@ void Engine::on_render() {
 			Model *model = gObj->getModel();
 			Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale() };
 			renderables.push_back(renderable);
+		} else if(typeid(*gObj) == typeid(PointLight)) {
+			PointLightNode *pointLightNode = static_cast<PointLightNode*>(gObj);
+			pointLights.push_back(pointLightNode->pointLight);
+		} else if(typeid(*gObj) == typeid(PointLight)) {
+			SpotLightNode *spotLightNode = static_cast<SpotLightNode*>(gObj);
+			spotLights.push_back(spotLightNode->spotLight);
 		} else {
 			// TODO: Panic
 		}
