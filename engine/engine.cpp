@@ -293,13 +293,13 @@ void Engine::run() {
 			} else if(typeid(*gObj) == typeid(PointLightNode)) {
 				PointLightNode *pointLightNode = static_cast<PointLightNode*>(gObj);
 				pointLights.push_back(pointLightNode->pointLight);
-				Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
-				renderables.push_back(renderable);
+				// Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
+				// renderables.push_back(renderable);
 			} else if(typeid(*gObj) == typeid(SpotLightNode)) {
 				SpotLightNode *spotLightNode = static_cast<SpotLightNode*>(gObj);
 				spotLights.push_back(spotLightNode->spotLight);
-				Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
-				renderables.push_back(renderable);
+				// Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
+				// renderables.push_back(renderable);
 			} else {
 				// TODO: Panic
 			}
