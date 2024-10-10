@@ -2,6 +2,7 @@
 
 DirectionalLightNode::DirectionalLightNode(
     std::string name,
+    glm::vec3 position,
     glm::vec3 direction,
     glm::vec3 color,
     int shadowWidth,
@@ -10,13 +11,14 @@ DirectionalLightNode::DirectionalLightNode(
     float diffuceIntensity
 ) : GameObject(
     name,
-    glm::vec3(),
+    position,
     glm::vec3(),
     glm::vec3(),
     nullptr,
     nullptr
 ) { 
     this->directionalLight = new DirectionalLight{
+        position,
         direction, 
         color,
         shadowWidth, 

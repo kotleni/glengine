@@ -8,6 +8,7 @@ class DirectionalLight : public Light {
 public:
 	DirectionalLight();
 	DirectionalLight(
+        glm::vec3 position,
 		glm::vec3 direction,
     	glm::vec3 color,
     	int shadowWidth,
@@ -24,6 +25,7 @@ public:
 	~DirectionalLight();
 
 private:
+    glm::vec3 position;
 	glm::vec3 direction;
 };
 

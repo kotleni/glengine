@@ -13,6 +13,7 @@ class DirectionalLightNode : public GameObject {
 public:
     DirectionalLightNode(
         std::string name,
+        glm::vec3 position,
         glm::vec3 direction,
         glm::vec3 color,
         int shadowWidth,

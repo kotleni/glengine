@@ -210,10 +210,11 @@ void Engine::run() {
 
 	DirectionalLightNode *directionalLightNode = new DirectionalLightNode(
 		"DirectionalLight",
-		glm::vec3(0.0f, -10.0f, 5.0f),
+		glm::vec3(0.0f, 32.0f, 8.0f),
+		glm::vec3(0.0f, -20.0f, 8.0f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
 		2048, 2048,
-		0.3f, 0.4f
+		0.7f, 0.8f
 	);
 	this->gameObjects->push_back(directionalLightNode);
 
