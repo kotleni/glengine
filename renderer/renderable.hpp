@@ -17,6 +17,7 @@ struct Renderable {
     Shader *shader;
     glm::vec3 position;
     glm::vec3 scale;
+    bool isEditorOnly;
     // TODO: Impl rotation
 };
 

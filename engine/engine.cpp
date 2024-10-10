@@ -219,7 +219,7 @@ void Engine::run() {
 
 	PointLightNode *pointLightNode = new PointLightNode(
 		"PointLight",
-		glm::vec3(0.0f, 15.0f, 0.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
 		glm::vec3(1.0f, 0.2f, 0.2f),
 		0.6f, 0.5f,
 		0.3f, 0.2f, 0.1f
@@ -240,6 +240,10 @@ void Engine::run() {
 
 	glm::vec2 render_size = engine()->renderer->get_render_size();
 	camera = new Camera(render_size);
+
+	Model *cubeModel = resourcesMamanger->getModel("../assets/models/Cube/cube.obj");
+	Shader *devShader = resourcesMamanger->getShader("dev");
+	glm::vec3 devCubeScale = glm::vec3(0.5f, 0.5f, 0.5f);
 
     is_runing = true;
 
@@ -284,14 +288,18 @@ void Engine::run() {
 				directionalLight = directionalLightNode->directionalLight;
 			} else if(typeid(*gObj) == typeid(BasicGameObject)) { // BasicGameObject
 				Model *model = gObj->getModel();
-				Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale() };
+				Renderable renderable = { model, gObj->getShader(), gObj->getPosition(), gObj->getScale(), false };
 				renderables.push_back(renderable);
-			} else if(typeid(*gObj) == typeid(PointLight)) {
+			} else if(typeid(*gObj) == typeid(PointLightNode)) {
 				PointLightNode *pointLightNode = static_cast<PointLightNode*>(gObj);
 				pointLights.push_back(pointLightNode->pointLight);
-			} else if(typeid(*gObj) == typeid(PointLight)) {
+				Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
+				renderables.push_back(renderable);
+			} else if(typeid(*gObj) == typeid(SpotLightNode)) {
 				SpotLightNode *spotLightNode = static_cast<SpotLightNode*>(gObj);
 				spotLights.push_back(spotLightNode->spotLight);
+				Renderable renderable = { cubeModel, devShader, gObj->getPosition(), devCubeScale };
+				renderables.push_back(renderable);
 			} else {
 				// TODO: Panic
 			}

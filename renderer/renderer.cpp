@@ -84,6 +84,10 @@ void Renderer::renderPass(
     // Render all renderables
     for(int i = 0; i < renderables.size(); i += 1) {
         Renderable renderable = renderables.at(i);
+
+        // Do not render object for backing shadow map
+        if(renderable.isEditorOnly && isForBackingShadowMap) return;
+
         Shader *shader = renderable.shader;
     
         // Directional light
