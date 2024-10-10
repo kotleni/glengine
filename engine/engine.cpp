@@ -213,28 +213,28 @@ void Engine::run() {
 		glm::vec3(0.0f, -10.0f, 5.0f),
 		glm::vec3(1.0f, 1.0f, 1.0f),
 		2048, 2048,
-		0.8f, 0.6f
+		0.3f, 0.4f
 	);
 	this->gameObjects->push_back(directionalLightNode);
 
 	PointLightNode *pointLightNode = new PointLightNode(
 		"PointLight",
-		glm::vec3(0.0f, 5.0f, 0.0f),
+		glm::vec3(45.0f, 5.0f, 0.0f),
 		glm::vec3(1.0f, 0.2f, 0.2f),
-		0.6f, 0.5f,
-		0.3f, 0.2f, 0.1f
+		10.6f, 8.5f,
+		0.3f, 0.2f, 0.5f
 	);
 	this->gameObjects->push_back(pointLightNode);
 
 	SpotLightNode *spotLightNode = new SpotLightNode(
 		"SpotLight",
-		glm::vec3(0.0f, 15.0f, 0.0f), // pos
-		glm::vec3(0.0f, 0.0f, 0.0f), // dir
-		glm::vec3(0.2f, 1.0f, 0.2f), // color
+		glm::vec3(0.0f, 5.0f, 0.0f), // pos
+		glm::vec3(0.0f, -1.0f, 1.0f), // dir
+		glm::vec3(1.0f, 1.0f, 1.0f), // color
 		2048, 2048,
-		0.6f, 0.5f,
+		3.6f, 3.8f,
 		0.3f, 0.2f, 0.1f,
-		20.0f
+		90.0f
 	);
 	this->gameObjects->push_back(spotLightNode);
 
