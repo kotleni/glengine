@@ -188,7 +188,7 @@ GameObject *Engine::createGameObject(
 void Engine::run() {
 	render_splash();
 
-	SDL_SetRelativeMouseMode(SDL_TRUE);
+	SDL_SetRelativeMouseMode(SDL_FALSE);
 
 	// Loading game objects
 	this->gameObjects = new std::vector<GameObject*>();
@@ -219,7 +219,7 @@ void Engine::run() {
 
 	PointLightNode *pointLightNode = new PointLightNode(
 		"PointLight",
-		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 5.0f, 0.0f),
 		glm::vec3(1.0f, 0.2f, 0.2f),
 		0.6f, 0.5f,
 		0.3f, 0.2f, 0.1f

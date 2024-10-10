@@ -17,10 +17,10 @@ PointLight::PointLight(
 	float linear,
 	float exponent
 ) : Light(color, 1024, 1024, ambientIntensity, diffuceIntensity) {
-	position = position;
-	constant = constant;
-	linear = linear;
-	exponent = exponent;
+	this->position = position;
+	this->constant = constant;
+	this->linear = linear;
+	this->exponent = exponent;
 }
 
 void PointLight::useLight(GLfloat ambientIntensityLocation, GLfloat ambientColourLocation, 

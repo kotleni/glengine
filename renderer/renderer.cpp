@@ -89,6 +89,7 @@ void Renderer::renderPass(
         if(renderable.isEditorOnly && isForBackingShadowMap) return;
 
         Shader *shader = renderable.shader;
+        if(isForBackingShadowMap) shader = this->directionalShadowShader;
     
         // Directional light
         if(!isForBackingShadowMap) {
@@ -122,8 +123,6 @@ void Renderer::renderPass(
 
         // Apply model
         uniformModel = shader->getModelLocation();
-        if(isForBackingShadowMap)
-            uniformModel = this->directionalShadowShader->getModelLocation();
         glUniformMatrix4fv(uniformModel, 1, GL_FALSE, glm::value_ptr(model));
 
         renderable.model->Draw(*shader, !isForBackingShadowMap);

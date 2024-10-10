@@ -2,6 +2,7 @@
 #define H_DIRECTIONALLIGHT
 
 #include "Light.hpp"
+#include <iostream>
 
 class DirectionalLight : public Light {
 public:

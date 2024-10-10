@@ -19,10 +19,10 @@ SpotLight::SpotLight(
 	float exponent,
 	float edge
 ) : PointLight(position, color, ambientIntensity, diffuceIntensity, constant, linear, exponent) {
-	direction = glm::normalize(direction);
+	this->direction = glm::normalize(direction);
 
 	this->edge = edge;
-	procEdge = cosf(glm::radians(this->edge));
+	this->procEdge = cosf(glm::radians(this->edge));
 }
 
 void SpotLight::useLight(GLuint ambientIntensityLocation, GLuint ambientColourLocation,
